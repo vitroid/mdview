@@ -1,4 +1,4 @@
-/* "mdv_util.h" ³Æ¼ï¥æ¡¼¥Æ¥£¥ê¥Æ¥£ ¥Ø¥Ã¥À */
+/* "mdv_util.h" å„ç¨®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ ãƒ˜ãƒƒãƒ€ */
 
 #ifndef _MDV_UTIL_H
 #define _MDV_UTIL_H
@@ -17,28 +17,28 @@
 
 #include "mdv_type.h"
 
-/* ³ÈÄ¥atexit() */
+/* æ‹¡å¼µatexit() */
 extern int  AtExit(void (*func)(void));
 
-/* Ê¸»úÎó <-> Ê¸»úÎóID */
+/* æ–‡å­—åˆ— <-> æ–‡å­—åˆ—ID */
 extern StringID SearchStringID(const char *str);
 extern StringID Str2StringID(const char *str);
 extern const char *StringID2Str(StringID sid);
 
-/* ¿§Ê¸»úÎó->RGBÂĞ±şÉ½ */
+/* è‰²æ–‡å­—åˆ—->RGBå¯¾å¿œè¡¨ */
 extern int Str2Rgb(const char *name, int *pr, int *pg, int *pb);
 
-/* ¥ï¡¼¥¯¥¨¥ê¥¢ */
+/* ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢ */
 extern void *MDV_Work_Alloc(MDV_Size n);
 extern void MDV_Work_Free(void *p);
 
-/* ²ÄÊÑÄ¹ÇÛÎó */
+/* å¯å¤‰é•·é…åˆ— */
 typedef struct {
-  const char *header_str; /* ¥Ø¥Ã¥ÀÊ¸»úÎó */
-  void *p;       /* ¥Ç¡¼¥¿ÎÎ°è */
-  MDV_Size n;    /* ¸½ºß¤ÎÇÛÎó¤ÎÍ×ÁÇ¿ô */
-  MDV_Size size; /* 1Í×ÁÇ¤Î¥Ğ¥¤¥È¿ô */
-  MDV_Size max;  /* ¥Ç¡¼¥¿ÎÎ°è¤Î¥Ğ¥¤¥È¿ô */
+  const char *header_str; /* ãƒ˜ãƒƒãƒ€æ–‡å­—åˆ— */
+  void *p;       /* ãƒ‡ãƒ¼ã‚¿é ˜åŸŸ */
+  MDV_Size n;    /* ç¾åœ¨ã®é…åˆ—ã®è¦ç´ æ•° */
+  MDV_Size size; /* 1è¦ç´ ã®ãƒã‚¤ãƒˆæ•° */
+  MDV_Size max;  /* ãƒ‡ãƒ¼ã‚¿é ˜åŸŸã®ãƒã‚¤ãƒˆæ•° */
 } MDV_Array;
 
 extern MDV_Array *MDV_Array_Alloc(MDV_Size size);
@@ -48,13 +48,14 @@ extern void _MDV_Array_Resize(MDV_Array *a, char c);
 #define MDV_Array_AppendChar(a, c) ((a)->n<(a)->max?\
   ((char *) (a)->p)[(a)->n++]=(c):_MDV_Array_Resize((a), (c)))
 
-/* path´ØÏ¢ */
+/* pathé–¢é€£ */
 extern int IsRelativePath(const char *path);
 extern const char *Path2Dir(const char *path);
 extern const char *Path2File(const char *path);
 
-/* ¥¨¥é¡¼½ªÎ»½èÍı */
+/* ã‚¨ãƒ©ãƒ¼çµ‚äº†å‡¦ç† */
 extern void MDV_Fatal(const char *str);
+extern void MDV_Info(const char *str);
 extern void HeapError(void);
 
 #endif /* _MDV_UTIL_H */

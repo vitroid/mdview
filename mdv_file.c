@@ -1,4 +1,4 @@
-/* "mdv_file.c" ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤Ë´Ø¤¹¤ë½èÍı */
+/* "mdv_file.c" ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã«é–¢ã™ã‚‹å‡¦ç† */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,9 +13,9 @@
 #include "mdv_file.h"
 #include "machine.h"  /* Strlcat() */
 
-/* ---- privateÀë¸À -------------------------------------------------------- */
+/* ---- privateå®£è¨€ -------------------------------------------------------- */
 
-/* ²ÄÊÑÄ¹Ê¸»úÎó */
+/* å¯å¤‰é•·æ–‡å­—åˆ— */
 typedef MDV_Array MDV_String;
 #define MDV_StringP(sp)          ((char *) (sp)->p)
 #define MDV_String_Free(p)       MDV_Array_Free(p)
@@ -25,26 +25,26 @@ static MDV_String *MDV_String_Alloc(void);
 static void MDV_String_StrCpy(MDV_String *p, const char *str);
 static void MDV_String_StrCat(MDV_String *p, const char *str);
 
-/* MDV_IO·¿ */
+/* MDV_IOå‹ */
 typedef struct {
-  MDV_String *comment;   /* ¥³¥á¥ó¥È */
-  MDV_Array *argument;   /* °ú¿ôÎó */
-  MDV_Array *atom;       /* ¸¶»Ò¥ê¥¹¥È */
-  MDV_Array *coordinate; /* ¸¶»Ò¤ÎºÂÉ¸ */
-  MDV_Array *bond;       /* ·ë¹ç¥ê¥¹¥È */
+  MDV_String *comment;   /* ã‚³ãƒ¡ãƒ³ãƒˆ */
+  MDV_Array *argument;   /* å¼•æ•°åˆ— */
+  MDV_Array *atom;       /* åŸå­ãƒªã‚¹ãƒˆ */
+  MDV_Array *coordinate; /* åŸå­ã®åº§æ¨™ */
+  MDV_Array *bond;       /* çµåˆãƒªã‚¹ãƒˆ */
 } MDV_IO;
 
 static void *MDV_IO_Alloc(void);
 static void MDV_IO_Free(void *p);
 static void MDV_IO_Copy(void *v1, const void *v2);
 
-/* ¥¨¥ó¥Ç¥£¥¢¥ó¥Í¥¹´ØÏ¢ */
+/* ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒã‚¹é–¢é€£ */
 #define BINARY_HEADERSIZE 4
 static MDV_Size ReadHeader(char *header);
 static MDV_Size xchg_int(MDV_Size x);
 static void xchg_dbl_array(double *x, MDV_Size n);
 
-/* ==== publicÄêµÁ ========================================================= */
+/* ==== publicå®šç¾© ========================================================= */
 
 #define MDV_FILE_UNKNOWN 0
 #define MDV_FILE_TEXT   -1
@@ -61,8 +61,8 @@ static SeekFileDataFunc mdv_io_f = {
   MDV_IO_Copy
 };
 
-/* off_t·¿¤ò10¿Ê¿ôÊ¸»úÎó¤ËÊÑ´¹¤¹¤ë */
-#define OFF_T_STRMAX 20 /* (1<<63)-1¤òÉ½¤»¤ëÊ¸»ú¿ô+'\0' */
+/* off_tå‹ã‚’10é€²æ•°æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹ */
+#define OFF_T_STRMAX 20 /* (1<<63)-1ã‚’è¡¨ã›ã‚‹æ–‡å­—æ•°+'\0' */
 static char off_t2str_p[OFF_T_STRMAX];
 static const char *off_t2str(off_t val) {
   int i;
@@ -82,7 +82,7 @@ static const char *off_t2str(off_t val) {
   return &off_t2str_p[i+1];
 }
 
-/* ¥Õ¥¡¥¤¥ë¤Î¥ª¡¼¥×¥ó(¼ºÇÔ¤ÏNULL) */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ªãƒ¼ãƒ—ãƒ³(å¤±æ•—ã¯NULL) */
 MDV_FILE *MDV_FileOpen(const char *path, MDV_Size n) {
   MDV_FILE *mfp;
 
@@ -129,12 +129,12 @@ MDV_FILE *MDV_FileOpen(const char *path, MDV_Size n) {
   return mfp;
 }
 
-/* ¥Õ¥¡¥¤¥ë¤ÎºÆÆÉ¤ß¹ş¤ß */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®å†èª­ã¿è¾¼ã¿ */
 int MDV_FileReload(MDV_FILE *mfp) {
   return SeekFileReload(mfp->sfp);
 }
 
-/* ¥Õ¥¡¥¤¥ë¤Î¥¯¥í¡¼¥º */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¯ãƒ­ãƒ¼ã‚º */
 void MDV_FileClose(MDV_FILE *mfp) {
   if (mfp == NULL)
     return;
@@ -146,7 +146,7 @@ void MDV_FileClose(MDV_FILE *mfp) {
     fprintf(stderr, "MDV_FileClose(): done.\n");
 }
 
-/* ¥Õ¥¡¥¤¥ë¤Î¼ïÎà¤ÎÈ½ÊÌ */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®ç¨®é¡ã®åˆ¤åˆ¥ */
 #ifndef STRSIZE
 #define STRSIZE 256
 #endif
@@ -180,7 +180,7 @@ static int MDV_GetFileType(MDV_FILE *mfp) {
     if (fgets(str, STRSIZE, fp) == NULL)
       return MDV_FILE_UNKNOWN;
     for (i = 0; i < STRSIZE && str[i] != '\0'; i++) {
-      if (str[i]&0x80) /* TODO: ¸·Ì©¤Ç¤Ï¤Ê¤¤¡£²şÎÉ¤¹¤Ù¤­ */
+      if (str[i]&0x80) /* TODO: å³å¯†ã§ã¯ãªã„ã€‚æ”¹è‰¯ã™ã¹ã */
         return MDV_FILE_UNKNOWN;
     }
     return MDV_FILE_TEXT;
@@ -189,11 +189,11 @@ static int MDV_GetFileType(MDV_FILE *mfp) {
   return MDV_FILE_UNKNOWN;
 }
 
-/* ¥Õ¥¡¥¤¥ë¤Î¥³¥á¥ó¥È */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ¡ãƒ³ãƒˆ */
 #define MAXCOMMENT 65536
 static char comment_str[MAXCOMMENT] = "";
 
-/* ¥³¥á¥ó¥È¤òÊÖ¤¹(TODO: ¸½ºß¡¢nstep¤Ë´Ø·¸¤Ê¤¯ºÇ¿·¤ÎÃÍ¤òÊÖ¤¹) */
+/* ã‚³ãƒ¡ãƒ³ãƒˆã‚’è¿”ã™(TODO: ç¾åœ¨ã€nstepã«é–¢ä¿‚ãªãæœ€æ–°ã®å€¤ã‚’è¿”ã™) */
 char *GetInformation(MDV_Size i) {
   return comment_str;
 }
@@ -202,7 +202,7 @@ static FILE *_readtoken_fp = NULL;
 static const char *_readtoken_str = NULL;
 static MDV_String *_readtoken_comment = NULL;
 
-/* _ReadToken()¤Î½é´ü²½ */
+/* _ReadToken()ã®åˆæœŸåŒ– */
 static void _ReadToken_Init(FILE *fp, MDV_String *comment) {
   if (_readtoken_fp != NULL || fp == NULL)
     MDV_Fatal("_ReadToken_Init()");
@@ -211,7 +211,7 @@ static void _ReadToken_Init(FILE *fp, MDV_String *comment) {
   _readtoken_comment = comment;
 }
 
-/* _ReadToken()¤Î½ªÎ»½èÍı */
+/* _ReadToken()ã®çµ‚äº†å‡¦ç† */
 static void _ReadToken_Term(void) {
   if (_readtoken_fp == NULL)
     MDV_Fatal("_ReadToken_Term()");
@@ -221,7 +221,7 @@ static void _ReadToken_Term(void) {
   _readtoken_comment = NULL;
 }
 
-/* _SReadToken()¤Î½é´ü²½ */
+/* _SReadToken()ã®åˆæœŸåŒ– */
 static void _SReadToken_Init(const char *str, MDV_String *comment) {
   if (_readtoken_str != NULL || str == NULL)
     MDV_Fatal("_SReadToken_Init()");
@@ -230,7 +230,7 @@ static void _SReadToken_Init(const char *str, MDV_String *comment) {
   _readtoken_comment = comment;
 }
 
-/* _SReadToken()¤Î½ªÎ»½èÍı */
+/* _SReadToken()ã®çµ‚äº†å‡¦ç† */
 static void _SReadToken_Term(void) {
   if (_readtoken_str == NULL)
     MDV_Fatal("_SReadToken_Term()");
@@ -240,7 +240,7 @@ static void _SReadToken_Term(void) {
   _readtoken_comment = NULL;
 }
 
-/* ¥³¥á¥ó¥È¤ò´Ş¤à°ú¿ô¤ÎÆÉ¤ß¹ş¤ß */
+/* ã‚³ãƒ¡ãƒ³ãƒˆã‚’å«ã‚€å¼•æ•°ã®èª­ã¿è¾¼ã¿ */
 static const char *_ReadToken(void) {
   int lines, last;
   const char *str;
@@ -254,7 +254,7 @@ static const char *_ReadToken(void) {
   return str;
 }
 
-/* ¥³¥á¥ó¥È¤ò´Ş¤à°ú¿ô¤ÎÆÉ¤ß¹ş¤ß */
+/* ã‚³ãƒ¡ãƒ³ãƒˆã‚’å«ã‚€å¼•æ•°ã®èª­ã¿è¾¼ã¿ */
 static const char *_SReadToken(void) {
   int lines, last;
   const char *str;
@@ -273,9 +273,9 @@ static const char *_SReadToken(void) {
   return str;
 }
 
-/* FORTRANÉ÷¤Îdouble¤ÎÉ½¸½¤òCÉ÷¤ËÄ¾¤¹¡£ */
+/* FORTRANé¢¨ã®doubleã®è¡¨ç¾ã‚’Cé¢¨ã«ç›´ã™ã€‚ */
 static const char *StrF2C(const char *str) {
-  static MDV_String *strf2c_p = NULL; /* »ÃÄêÈÇ: ²òÊü¤·¤Ê¤¤ */
+  static MDV_String *strf2c_p = NULL; /* æš«å®šç‰ˆ: è§£æ”¾ã—ãªã„ */
   char c, *p;
   int i;
 
@@ -294,7 +294,7 @@ static const char *StrF2C(const char *str) {
   return p;
 }
 
-/* ²ÄÊÑÄ¹Ê¸»úÇÛÎó¤ËÊ¸»úÎóstr¤òÄÉ²Ã¤¹¤ë */
+/* å¯å¤‰é•·æ–‡å­—é…åˆ—ã«æ–‡å­—åˆ—strã‚’è¿½åŠ ã™ã‚‹ */
 static void MDV_Array_AppendString(MDV_Array *p, const char *str) {
   MDV_Size n, last;
 
@@ -306,10 +306,10 @@ static void MDV_Array_AppendString(MDV_Array *p, const char *str) {
   Strlcpy(((char *) p->p)+last, str, n+1);
 }
 
-/* ReadData_*¤Î¤¿¤á¤Î²ÄÊÑÄ¹Ê¸»úÎó */
+/* ReadData_*ã®ãŸã‚ã®å¯å¤‰é•·æ–‡å­—åˆ— */
 static MDV_String *_readdata_str = NULL;
 
-/* ¥Æ¥­¥¹¥È¤«¤é1step¤òÆÉ¤à(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* ãƒ†ã‚­ã‚¹ãƒˆã‹ã‚‰1stepã‚’èª­ã‚€(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 static int ReadData_Text(FILE *fp, MDV_IO *iop, off_t len) {
   const char *(*f_token)(void);
   const char *str;
@@ -320,9 +320,9 @@ static int ReadData_Text(FILE *fp, MDV_IO *iop, off_t len) {
   int ret = 0;
 
   if (terminate_blank_line) {
-    /* Ê¸»úÇÛÎó¤ËÆÉ¤ß¹ş¤à */
+    /* æ–‡å­—é…åˆ—ã«èª­ã¿è¾¼ã‚€ */
     if (_readdata_str == NULL)
-      _readdata_str = MDV_String_Alloc(); /* »ÃÄêÈÇ: ²òÊü¤·¤Ê¤¤ */
+      _readdata_str = MDV_String_Alloc(); /* æš«å®šç‰ˆ: è§£æ”¾ã—ãªã„ */
     if (len > 0) {
       if ((MDV_Size) len != len || (size_t) len != len)
         MDV_Fatal("ReadData_Text2(): Too large data block found.");
@@ -343,12 +343,12 @@ static int ReadData_Text(FILE *fp, MDV_IO *iop, off_t len) {
     if (iop == NULL)
       return 1;
 
-    /* _SReadToken()¤Î½é´ü²½ */
+    /* _SReadToken()ã®åˆæœŸåŒ– */
     MDV_String_StrCpy(iop->comment, "");
     _SReadToken_Init((const char *) _readdata_str->p, iop->comment);
     f_token = _SReadToken;
   } else {
-    /* _ReadToken()¤Î½é´ü²½ */
+    /* _ReadToken()ã®åˆæœŸåŒ– */
     if (iop != NULL) {
       MDV_String_StrCpy(iop->comment, "");
       _ReadToken_Init(fp, iop->comment);
@@ -358,7 +358,7 @@ static int ReadData_Text(FILE *fp, MDV_IO *iop, off_t len) {
     f_token = _ReadToken;
   }
 
-  /* ¸¶»Ò¤ÎÂĞ±şÉ½¤È¥µ¥¤¥º */
+  /* åŸå­ã®å¯¾å¿œè¡¨ã¨ã‚µã‚¤ã‚º */
   atom = MDV_VAtomIDP(md_atom);
   n = MDV_VAtomIDGetSize(md_atom);
   if (n <= 0)
@@ -368,7 +368,7 @@ static int ReadData_Text(FILE *fp, MDV_IO *iop, off_t len) {
     MDV_Array_SetSize(iop->coordinate, n*3);
   }
 
-  /* Î³»Ò¤ÎºÂÉ¸ */
+  /* ç²’å­ã®åº§æ¨™ */
   for (i = 0; i < n; i++) {
     for (j = 0; j < 3; j++) {
       if ((str = f_token()) == NULL)
@@ -390,7 +390,7 @@ term:
   return ret;
 }
 
-/* ³ÈÄ¥¥Æ¥­¥¹¥È¤«¤é1step¤òÆÉ¤à(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* æ‹¡å¼µãƒ†ã‚­ã‚¹ãƒˆã‹ã‚‰1stepã‚’èª­ã‚€(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
   const char *(*f_token)(void);
   const char *str;
@@ -403,9 +403,9 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
   int ret = 0;
 
   if (terminate_blank_line) {
-    /* Ê¸»úÇÛÎó¤ËÆÉ¤ß¹ş¤à */
+    /* æ–‡å­—é…åˆ—ã«èª­ã¿è¾¼ã‚€ */
     if (_readdata_str == NULL)
-      _readdata_str = MDV_String_Alloc(); /* »ÃÄêÈÇ: ²òÊü¤·¤Ê¤¤ */
+      _readdata_str = MDV_String_Alloc(); /* æš«å®šç‰ˆ: è§£æ”¾ã—ãªã„ */
     if (len > 0) {
       if ((MDV_Size) len != len || (size_t) len != len)
         MDV_Fatal("ReadData_Text2(): Too large data block found.");
@@ -426,12 +426,12 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
     if (iop == NULL)
       return 1;
 
-    /* _SReadToken()¤Î½é´ü²½ */
+    /* _SReadToken()ã®åˆæœŸåŒ– */
     MDV_String_StrCpy(iop->comment, "");
     _SReadToken_Init((const char *) _readdata_str->p, iop->comment);
     f_token = _SReadToken;
   } else {
-    /* _ReadToken()¤Î½é´ü²½ */
+    /* _ReadToken()ã®åˆæœŸåŒ– */
     if (iop != NULL) {
       MDV_String_StrCpy(iop->comment, "");
       _ReadToken_Init(fp, iop->comment);
@@ -441,7 +441,7 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
     f_token = _ReadToken;
   }
 
-  /* °ú¿ô */
+  /* å¼•æ•° */
   if (iop != NULL)
     MDV_Array_SetSize(iop->argument, 0);
   while ((str = f_token()) != NULL && str[0] == '-') {
@@ -460,7 +460,7 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
   if (str == NULL)
     goto term;
 
-  /* Î³»Ò¿ô */
+  /* ç²’å­æ•° */
   n = strtol(str, &end, 10);
   if (n <= 0 || *end != '\0')
     goto term;
@@ -470,7 +470,7 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
     exit(1);
   }
 
-  /* ·ë¹ç¥ê¥¹¥È¤ÎÂç¤­¤µ */
+  /* çµåˆãƒªã‚¹ãƒˆã®å¤§ãã• */
   if ((str = f_token()) == NULL) {
     if (n == 0)
       ret = 1;
@@ -484,7 +484,7 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
       goto term;
   }
 
-  /* ¸¶»Ò¥ê¥¹¥È¤ÈÎ³»Ò¤ÎºÂÉ¸ */
+  /* åŸå­ãƒªã‚¹ãƒˆã¨ç²’å­ã®åº§æ¨™ */
   if (iop != NULL) {
     MDV_Array_SetSize(iop->atom, 0);
     MDV_Array_SetSize(iop->coordinate, n*3);
@@ -508,7 +508,7 @@ static int ReadData_Text2(FILE *fp, MDV_IO *iop, off_t len) {
     }
   }
 
-  /* ·ë¹ç¥ê¥¹¥È */
+  /* çµåˆãƒªã‚¹ãƒˆ */
   if (iop != NULL)
     MDV_Array_SetSize(iop->bond, 0);
   if (line_n > 0) {
@@ -529,7 +529,7 @@ term:
   return ret;
 }
 
-/* FORTRAN¥Ğ¥¤¥Ê¥ê¤«¤é1step¤òÆÉ¤à(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* FORTRANãƒã‚¤ãƒŠãƒªã‹ã‚‰1stepã‚’èª­ã‚€(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 static int ReadData_Binary(FILE *fp, MDV_IO *iop, int xchg) {
   AtomID *atom;
   char header[BINARY_HEADERSIZE];
@@ -537,7 +537,7 @@ static int ReadData_Binary(FILE *fp, MDV_IO *iop, int xchg) {
   MDV_Size i, n;
   int ret = 0;
 
-  /* _ReadToken()¤Î½é´ü²½ */
+  /* _ReadToken()ã®åˆæœŸåŒ– */
   if (iop != NULL) {
     MDV_String_StrCpy(iop->comment, "");
     _ReadToken_Init(fp, iop->comment);
@@ -545,7 +545,7 @@ static int ReadData_Binary(FILE *fp, MDV_IO *iop, int xchg) {
     _ReadToken_Init(fp, NULL);
   }
 
-  /* ¸¶»Ò¤ÎÂĞ±şÉ½¤È¥µ¥¤¥º */
+  /* åŸå­ã®å¯¾å¿œè¡¨ã¨ã‚µã‚¤ã‚º */
   atom = MDV_VAtomIDP(md_atom);
   n = MDV_VAtomIDGetSize(md_atom);
   if (n <= 0)
@@ -555,7 +555,7 @@ static int ReadData_Binary(FILE *fp, MDV_IO *iop, int xchg) {
     MDV_Array_SetSize(iop->coordinate, n*3);
   }
 
-  /* Î³»Ò¤ÎºÂÉ¸ */
+  /* ç²’å­ã®åº§æ¨™ */
   if (fread(&header, BINARY_HEADERSIZE, 1, fp) < 1)
     goto term;
   work = MDV_Work_Alloc(sizeof(double)*3*n);
@@ -583,10 +583,10 @@ term:
 }
 
 /*
- * 1stepÊ¬¤Î¥Ç¡¼¥¿¤òÆÉ¤à¡£
- * val¤Ï¥Ç¡¼¥¿¤Ø¤Î¥İ¥¤¥ó¥¿¡£NULL¤Ê¤é·ë²Ì¤Îµ­Ï¿¤Ï¤·¤Ê¤¤¡£
- * len¤Ï¥¹¥Æ¥Ã¥×¤Î¥Ğ¥¤¥È¿ô¡£Éé¤ÎÃÍ¤Ê¤éÉÔÌÀ¡£
- * ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶¡£
+ * 1stepåˆ†ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€ã€‚
+ * valã¯ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã€‚NULLãªã‚‰çµæœã®è¨˜éŒ²ã¯ã—ãªã„ã€‚
+ * lenã¯ã‚¹ãƒ†ãƒƒãƒ—ã®ãƒã‚¤ãƒˆæ•°ã€‚è² ã®å€¤ãªã‚‰ä¸æ˜ã€‚
+ * è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½ã€‚
  */
 static int MDV_ReadData(SeekFILE *sfp, void *val, off_t len) {
   MDV_FILE *mfp;
@@ -612,11 +612,11 @@ static int MDV_ReadData(SeekFILE *sfp, void *val, off_t len) {
   return ret;
 }
 
-/* ¥Õ¥¡¥¤¥ë¤«¤éstepÈÖÌÜ¤Î¥¹¥Æ¥Ã¥×¤ÎÆâÍÆ¤òÆÉ¤ß¡¢coord, linelist¤òÀßÄê¤¹¤ë */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰stepç•ªç›®ã®ã‚¹ãƒ†ãƒƒãƒ—ã®å†…å®¹ã‚’èª­ã¿ã€coord, linelistã‚’è¨­å®šã™ã‚‹ */
 #define MAXOPTARGS 5
 int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
     MDV_Size step) {
-  static MDV_IO *iop = NULL; /* »ÃÄêÈÇ: ³«Êü¤·¤Ê¤¤ */
+  static MDV_IO *iop = NULL; /* æš«å®šç‰ˆ: é–‹æ”¾ã—ãªã„ */
   MDV_3D *coordp;
   MDV_Size n, i;
   int ret;
@@ -626,17 +626,18 @@ int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
   if (mfp == NULL)
     MDV_Fatal("_MDV_FileRead()");
 
-  /* ½é´ü²½ */
+  /* åˆæœŸåŒ– */
   if (iop == NULL) {
     if ((iop = MDV_IO_Alloc()) == NULL)
       HeapError();
   }
 
-  /* ¥Õ¥¡¥¤¥ë¤òÆÉ¤à */
+  /* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã‚€ */
   if ((ret = SeekFileRead(mfp->sfp, iop, step)) != SEEK_READ_SUCCESS)
+    MDV_Info("Seek failed.");
     return ret;
 
-  /* °ú¿ô */
+  /* å¼•æ•° */
   if (iop->argument->n > 0) {
     const char *p = (const char *) iop->argument->p;
 
@@ -661,7 +662,7 @@ int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
     MDV_StatusCopy(mdv_status_default, mdv_status_tmp);
   }
 
-  /* atom[]¤ÎÀßÄê */
+  /* atom[]ã®è¨­å®š */
   if (iop->atom->n > 0) {
     const char *p = (const char *) iop->atom->p;
 
@@ -682,7 +683,7 @@ int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
     n = MDV_VAtomIDGetSize(md_atom);
   }
 
-  /* coord[]¤ÎÀßÄê */
+  /* coord[]ã®è¨­å®š */
   MDV_CoordSetSize(coord, n);
   coordp = MDV_CoordP(coord);
   for (i = 0; i < n; i++) {
@@ -694,7 +695,7 @@ int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
       * mdv_status_default->length_unit;
   }
 
-  /* linelist[]¤ÎÀßÄê */
+  /* linelist[]ã®è¨­å®š */
   if (iop->bond->n <= 0) {
     MDV_LineListSetSize(linelist, 0);
   } else {
@@ -729,25 +730,25 @@ int _MDV_FileRead(MDV_FILE *mfp, MDV_Coord *coord, MDV_LineList *linelist,
   return SEEK_READ_SUCCESS;
 }
 
-/* ºÇÂç¤Î¥¹¥Æ¥Ã¥×¿ô¤òÊÖ¤¹(¼ºÇÔ¤ÏÉé¤ÎÃÍ) */
+/* æœ€å¤§ã®ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚’è¿”ã™(å¤±æ•—ã¯è² ã®å€¤) */
 MDV_Step MDV_MaxStep(const MDV_FILE *mfp) {
   if (mfp == NULL)
     MDV_Fatal("MDV_MaxStep()");
   return (MDV_Step) SeekMaxStep(mfp->sfp);
 }
 
-/* stepÈÖÌÜ¤Ë¥·¡¼¥¯¤¹¤ë(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* stepç•ªç›®ã«ã‚·ãƒ¼ã‚¯ã™ã‚‹(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 int MDV_SeekTo(MDV_FILE *mfp, MDV_Step step) {
   if (mfp == NULL)
     MDV_Fatal("MDV_MaxStep()");
   return SeekPositionMove(mfp->sfp, step);
 }
 
-/* ==== privateÄêµÁ ======================================================== */
+/* ==== privateå®šç¾© ======================================================== */
 
-/* ---- ¥¨¥ó¥Ç¥£¥¢¥ó¥Í¥¹´ØÏ¢ ----------------------------------------------- */
+/* ---- ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒã‚¹é–¢é€£ ----------------------------------------------- */
 
-/* big endian¤«¤É¤¦¤«¤Î¸¡ºº */
+/* big endianã‹ã©ã†ã‹ã®æ¤œæŸ» */
 static int IsBigEndian(void) {
   int x = 0;
   int i;
@@ -759,7 +760,7 @@ static int IsBigEndian(void) {
   return (((char *) (&x))[0] == 0);
 }
 
-/* ¥Ø¥Ã¥À¤«¤é¥µ¥¤¥º¤òÆÉ¤à(endianÊİ»ı) */
+/* ãƒ˜ãƒƒãƒ€ã‹ã‚‰ã‚µã‚¤ã‚ºã‚’èª­ã‚€(endianä¿æŒ) */
 static MDV_Size ReadHeader(char *header) {
   MDV_Size n = 0;
   int i;
@@ -779,7 +780,7 @@ static MDV_Size ReadHeader(char *header) {
   return n;
 }
 
-/* BINARY_HEADERSIZE ByteÀ°¿ô¤Î¥Ğ¥¤¥È¥¹¥ï¥Ã¥× */
+/* BINARY_HEADERSIZE Byteæ•´æ•°ã®ãƒã‚¤ãƒˆã‚¹ãƒ¯ãƒƒãƒ— */
 static MDV_Size xchg_int(MDV_Size x) {
   MDV_Size n = 0;
   int i;
@@ -793,7 +794,7 @@ static MDV_Size xchg_int(MDV_Size x) {
   return n;
 }
 
-/* doubleÇÛÎó¤Î¥Ğ¥¤¥È¥¹¥ï¥Ã¥× */
+/* doubleé…åˆ—ã®ãƒã‚¤ãƒˆã‚¹ãƒ¯ãƒƒãƒ— */
 static void xchg_dbl_array(double *x, MDV_Size n) {
   char *s, c;
   MDV_Size i;
@@ -808,9 +809,9 @@ static void xchg_dbl_array(double *x, MDV_Size n) {
   }
 }
 
-/* ---- MDV_IO·¿ ----------------------------------------------------------- */
+/* ---- MDV_IOå‹ ----------------------------------------------------------- */
 
-/* MDV_IO·¿¤Î³ÎÊİ */
+/* MDV_IOå‹ã®ç¢ºä¿ */
 static void *MDV_IO_Alloc(void) {
   MDV_IO *p;
 
@@ -825,7 +826,7 @@ static void *MDV_IO_Alloc(void) {
   return (void *) p;
 }
 
-/* MDV_IO·¿¤Î³«Êü */
+/* MDV_IOå‹ã®é–‹æ”¾ */
 static void MDV_IO_Free(void *p) {
   if (p == NULL)
     return;
@@ -838,7 +839,7 @@ static void MDV_IO_Free(void *p) {
   return;
 }
 
-/* MDV_IO·¿¤Î¥³¥Ô¡¼ */
+/* MDV_IOå‹ã®ã‚³ãƒ”ãƒ¼ */
 static void MDV_IO_Copy(void *v1, const void *v2) {
   MDV_IO *p1, *p2;
 
@@ -859,14 +860,14 @@ static void MDV_IO_Copy(void *v1, const void *v2) {
   memcpy(p1->bond->p, p2->bond->p, p2->bond->n*p2->bond->size);
 }
 
-/* ---- ²ÄÊÑÄ¹Ê¸»úÎó ------------------------------------------------------- */
+/* ---- å¯å¤‰é•·æ–‡å­—åˆ— ------------------------------------------------------- */
 
 /*
- * MDV_String·¿¤ÎÊ¸»úÇÛÎó¤ÏÉ¬¤º'\0'¤Ç½ªÎ»¤¹¤ë¡£
- * ¤Ş¤¿¡¢ÊÖ¤¹¥µ¥¤¥º¤Ï'\0'¤ò´Ş¤Ş¤Ê¤¤¡£
+ * MDV_Stringå‹ã®æ–‡å­—é…åˆ—ã¯å¿…ãš'\0'ã§çµ‚äº†ã™ã‚‹ã€‚
+ * ã¾ãŸã€è¿”ã™ã‚µã‚¤ã‚ºã¯'\0'ã‚’å«ã¾ãªã„ã€‚
  */
 
-/* MDV_String·¿¤Î³ÎÊİ */
+/* MDV_Stringå‹ã®ç¢ºä¿ */
 static MDV_String *MDV_String_Alloc(void) {
   MDV_String *p;
   
@@ -877,7 +878,7 @@ static MDV_String *MDV_String_Alloc(void) {
   return p;
 }
 
-/* Ê¸»úÎó¤ò½ñ¤­¹ş¤à */
+/* æ–‡å­—åˆ—ã‚’æ›¸ãè¾¼ã‚€ */
 static void MDV_String_StrCpy(MDV_String *p, const char *str) {
   MDV_Size n;
 
@@ -886,7 +887,7 @@ static void MDV_String_StrCpy(MDV_String *p, const char *str) {
   Strlcpy((char *) p->p, str, p->n);
 }
 
-/* Ê¸»úÎó¤òÄÉ²Ã½ñ¤­¹ş¤ß¤¹¤ë */
+/* æ–‡å­—åˆ—ã‚’è¿½åŠ æ›¸ãè¾¼ã¿ã™ã‚‹ */
 static void MDV_String_StrCat(MDV_String *p, const char *str) {
   MDV_Size n, last;
 

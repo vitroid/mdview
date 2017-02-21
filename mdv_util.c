@@ -1,4 +1,4 @@
-/* "mdv_util.c" ³Æ¼ï¥æ¡¼¥Æ¥£¥ê¥Æ¥£ */
+/* "mdv_util.c" å„ç¨®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,72 +12,72 @@
 #include "stack.h"
 #include "str2int.h"
 
-/* ---- ³ÈÄ¥atexit()´ØÏ¢ --------------------------------------------------- */
+/* ---- æ‹¡å¼µatexit()é–¢é€£ --------------------------------------------------- */
 
-#define MAXATEXIT 256 /* ÅĞÏ¿´Ø¿ô¤Î¿ô¤Î¾å¸Â */
+#define MAXATEXIT 256 /* ç™»éŒ²é–¢æ•°ã®æ•°ã®ä¸Šé™ */
 static int atexit_n = 0;
 static void (*atexit_buf[MAXATEXIT])(void);
-static int atexit_active = 0; /* ½ªÎ»½èÍı¼Â¹ÔÃæ¤Ê¤é¿¿ */
+static int atexit_active = 0; /* çµ‚äº†å‡¦ç†å®Ÿè¡Œä¸­ãªã‚‰çœŸ */
 
-/* ¼Âºİ¤Ëatexit()¤Ç¸Æ¤Ğ¤ì¤ë´Ø¿ô */
+/* å®Ÿéš›ã«atexit()ã§å‘¼ã°ã‚Œã‚‹é–¢æ•° */
 static void TermAtExit(void) {
   atexit_active = 1;
   while (--atexit_n >= 0)
     (atexit_buf[atexit_n])();
 }
 
-/* atexit()¤ÎÂåÍÑ¤ò¤¹¤ë´Ø¿ô(À®¸ù¤¬0¤Ç¡¢¼ºÇÔ¤ÏÈó0¤òÊÖ¤¹¡£) */
+/* atexit()ã®ä»£ç”¨ã‚’ã™ã‚‹é–¢æ•°(æˆåŠŸãŒ0ã§ã€å¤±æ•—ã¯é0ã‚’è¿”ã™ã€‚) */
 int AtExit(void (*func)()) {
   if (atexit_active) {
-    /* ÀßÄê¤·¤¿´Ø¿ôÆâ¤ÇAtExit()¤ò¤·¤¿¤È¤­¤ÎÂĞºö */
+    /* è¨­å®šã—ãŸé–¢æ•°å†…ã§AtExit()ã‚’ã—ãŸã¨ãã®å¯¾ç­– */
     fprintf(stderr,"AtExit(): Illegal function call in TermAtExit().\n");
     return -1;
   }
 
   if (atexit_n <= 0) {
-    /* AtExit()¤Î½é´ü²½ */
+    /* AtExit()ã®åˆæœŸåŒ– */
     atexit(TermAtExit);
   }
   if (atexit_n >= MAXATEXIT) return -1;
-  /* ÅĞÏ¿ */
+  /* ç™»éŒ² */
   atexit_buf[atexit_n++] = func;
 
   return 0;
 }
 
-/* ---- Ê¸»úÎó <-> Ê¸»úÎóID ------------------------------------------------ */
+/* ---- æ–‡å­—åˆ— <-> æ–‡å­—åˆ—ID ------------------------------------------------ */
 
 static Str2Int_Type *sip = NULL;
 
-/* Ê¸»úÎóstr¤ËÂĞ±ş¤¹¤ëStringID¤òÊÖ¤¹¡£Ì¤ÃÎ¤ÎÊ¸»úÎó¤Ï¼ºÇÔ¡£(¼ºÇÔ¤ÏÉé¤ÎÃÍ) */
+/* æ–‡å­—åˆ—strã«å¯¾å¿œã™ã‚‹StringIDã‚’è¿”ã™ã€‚æœªçŸ¥ã®æ–‡å­—åˆ—ã¯å¤±æ•—ã€‚(å¤±æ•—ã¯è² ã®å€¤) */
 StringID SearchStringID(const char *str) {
   if (sip == NULL)
     sip = Str2Int_Alloc();
   return (StringID) Str2Int_SearchID(str, sip);
 }
 
-/* Ê¸»úÎóstr¤ËÂĞ±ş¤¹¤ëStringID¤òÊÖ¤¹¡£Ì¤ÃÎ¤ÎÊ¸»úÎó¤ÏÅĞÏ¿¡£(¼ºÇÔ¤ÏÉé¤ÎÃÍ) */
+/* æ–‡å­—åˆ—strã«å¯¾å¿œã™ã‚‹StringIDã‚’è¿”ã™ã€‚æœªçŸ¥ã®æ–‡å­—åˆ—ã¯ç™»éŒ²ã€‚(å¤±æ•—ã¯è² ã®å€¤) */
 StringID Str2StringID(const char *str) {
   if (sip == NULL)
     sip = Str2Int_Alloc();
   return (StringID) Str2Int_Str2ID(str, sip);
 }
 
-/* StringID¤ËÂĞ±ş¤¹¤ëÊ¸»úÎóstr¤òÊÖ¤¹(¼ºÇÔ¤ÏNULL) */
+/* StringIDã«å¯¾å¿œã™ã‚‹æ–‡å­—åˆ—strã‚’è¿”ã™(å¤±æ•—ã¯NULL) */
 const char *StringID2Str(StringID sid) {
   if (sip == NULL)
     sip = Str2Int_Alloc();
   return Str2Int_ID2Str((Str2Int_Size) sid, sip);
 }
 
-/* ---- Str2Rgb()´ØÏ¢ ------------------------------------------------------ */
+/* ---- Str2Rgb()é–¢é€£ ------------------------------------------------------ */
 
 #ifndef RGB_FILEPATH
 #define RGB_FILEPATH "/usr/X11R6/lib/X11/rgb.txt"
 #define RGB_FILEPATH "/opt/X11/share/X11/rgb.txt"
 #endif
 
-/* RGB_Type·¿ */
+/* RGB_Typeå‹ */
 typedef struct {
   StringID si;
   int r, g, b;
@@ -89,18 +89,18 @@ void RGB_Table_Free(RGB_Table *rtp);
 RGB_Type *RGB_Table_Search(const RGB_Table *rtp, StringID si);
 RGB_Type *RGB_Table_Insert(RGB_Table *rtp, StringID si);
 
-static RGB_Table *rgb_table = NULL; /* »ÃÄêÈÇ: ²òÊü¤·¤Ê¤¤ */
+static RGB_Table *rgb_table = NULL; /* æš«å®šç‰ˆ: è§£æ”¾ã—ãªã„ */
 
-/* rgb.txt¤òÆÉ¤ó¤Ç¡¢Ê¸»úÎó-RGBÃÍ¤ÎÂĞ±şÉ½¤ò½àÈ÷¤¹¤ë */
+/* rgb.txtã‚’èª­ã‚“ã§ã€æ–‡å­—åˆ—-RGBå€¤ã®å¯¾å¿œè¡¨ã‚’æº–å‚™ã™ã‚‹ */
 static int _init_rgbtable = 0;
 void RGBTableInit(void) {
   FILE *fp;
 
-  /* ½é´ü²½ */
+  /* åˆæœŸåŒ– */
   if ((rgb_table = RGB_Table_Alloc()) == NULL)
     HeapError();
 
-  /* rgb.txt¤Î¥ª¡¼¥×¥ó */
+  /* rgb.txtã®ã‚ªãƒ¼ãƒ—ãƒ³ */
   if ((RGB_FILEPATH)[0] != '/') {
     char *path;
     int npath;
@@ -118,7 +118,7 @@ void RGBTableInit(void) {
       fprintf(stderr, "%s: Can't open.(6)\n", RGB_FILEPATH);
   }
 
-  /* ÆÉ¤ß¹ş¤ß */
+  /* èª­ã¿è¾¼ã¿ */
   if (fp != NULL) {
     MDV_Array *line;
     int c;
@@ -129,7 +129,7 @@ void RGBTableInit(void) {
       RGB_Type rgb, *rp;
       int i;
 
-      /* °ì¹Ô¤ÎÆÉ¤ß¹ş¤ß */
+      /* ä¸€è¡Œã®èª­ã¿è¾¼ã¿ */
       MDV_Array_SetSize(line, 0);
       do {
         MDV_Array_AppendChar(line, c);
@@ -139,17 +139,17 @@ void RGBTableInit(void) {
       MDV_Array_AppendChar(line, '\0');
       p = (char *) line->p;
 
-      /* ¥³¥á¥ó¥È¹Ô¤Î¥¹¥­¥Ã¥× */
+      /* ã‚³ãƒ¡ãƒ³ãƒˆè¡Œã®ã‚¹ã‚­ãƒƒãƒ— */
       if (p[0] == '!')
         continue;
 
-      /* ½ªÃ¼¤Î¶õÇò¤È²ş¹ÔÊ¸»ú¤òºï½ü */
+      /* çµ‚ç«¯ã®ç©ºç™½ã¨æ”¹è¡Œæ–‡å­—ã‚’å‰Šé™¤ */
       for (i = line->n-1; i >= 0 && (p[i] == ' ' || p[i] == '\t'
           || p[i] == '\n' || p[i] == '\0'); i--) {
         p[i] = '\0';
       }
 
-      /* RGBÃÍ¤ÎÆÉ¤ß¹ş¤ß */
+      /* RGBå€¤ã®èª­ã¿è¾¼ã¿ */
       rgb.r = (int) strtol(p, &p, 10);
       if (errno == ERANGE)
         {fprintf(stderr,"Read error.(4)\n"); exit(1);}
@@ -160,16 +160,16 @@ void RGBTableInit(void) {
       if (errno == ERANGE)
         {fprintf(stderr,"Read error.(6)\n"); exit(1);}
 
-      /* ¶õÇòÊ¸»ú¤Î½üµî */
+      /* ç©ºç™½æ–‡å­—ã®é™¤å» */
       while (*p == ' ' || *p == '\t')
         p++;
 
-      /* ¿§Ê¸»úÎó¤ÎÆÉ¤ß¹ş¤ß */
+      /* è‰²æ–‡å­—åˆ—ã®èª­ã¿è¾¼ã¿ */
       if (p[0] == '\0')
         {fprintf(stderr,"Read error.(7)\n"); exit(1);}
       rgb.si = Str2StringID(p);
 
-      /* ÅĞÏ¿ */
+      /* ç™»éŒ² */
       if (!RGB_Table_Search(rgb_table, rgb.si)) {
         if ((rp = RGB_Table_Insert(rgb_table, rgb.si)) == NULL)
           MDV_Fatal("RGBTableInit()");
@@ -196,7 +196,7 @@ static int _hexnum(int c) {
   return c;
 }
 
-/* ¿§Ê¸»úÎó¤òÆÉ¤ó¤Ç¡¢ÂĞ±ş¤¹¤ëRGBÃÍ¤òµá¤á¤ë¡£(ÊÖÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* è‰²æ–‡å­—åˆ—ã‚’èª­ã‚“ã§ã€å¯¾å¿œã™ã‚‹RGBå€¤ã‚’æ±‚ã‚ã‚‹ã€‚(è¿”å€¤ã¯æˆåŠŸã®çœŸå½) */
 int Str2Rgb(const char *name, int *pr, int *pg, int *pb) {
   RGB_Type *ret;
   StringID si;
@@ -208,7 +208,7 @@ int Str2Rgb(const char *name, int *pr, int *pg, int *pb) {
   }
 
   if (name[0] == '#') {
-    /* "#RRGGBB"·Á¼° */
+    /* "#RRGGBB"å½¢å¼ */
     if ((h = _hexnum(name[1])) < 0) return 0;
     if ((l = _hexnum(name[2])) < 0) return 0;
     *pr = h*16+l;
@@ -219,7 +219,7 @@ int Str2Rgb(const char *name, int *pr, int *pg, int *pb) {
     if ((l = _hexnum(name[6])) < 0) return 0;
     *pb = h*16+l;
   } else {
-    /* ¿§¤ÎÌ¾Á° */
+    /* è‰²ã®åå‰ */
     if ((si = SearchStringID(name)) < 0
         || (ret = RGB_Table_Search(rgb_table, si)) == NULL)
       return 0;
@@ -231,9 +231,9 @@ int Str2Rgb(const char *name, int *pr, int *pg, int *pb) {
   return 1;
 }
 
-/* ---- RGB_Table·¿ -------------------------------------------------------- */
+/* ---- RGB_Tableå‹ -------------------------------------------------------- */
 
-/* RGB_Type·¿¤Î½é´ü²½ */
+/* RGB_Typeå‹ã®åˆæœŸåŒ– */
 void RGB_Type_Init(RGB_Type *rp, StringID si) {
   rp->si = si;
   rp->r = 0;
@@ -241,21 +241,21 @@ void RGB_Type_Init(RGB_Type *rp, StringID si) {
   rp->b = 0;
 }
 
-/* RGB_TypeÍÑ¥¢¥í¥±¡¼¥¿ */
+/* RGB_Typeç”¨ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ */
 #define RGB_CHUNK_SIZE (256*sizeof(RGB_Type))
-static Chunk_Type *rgb_chunk = NULL; /* »ÃÄêÈÇ: ½ªÎ»½èÍı¤Ï¾ÊÎ¬ */
+static Chunk_Type *rgb_chunk = NULL; /* æš«å®šç‰ˆ: çµ‚äº†å‡¦ç†ã¯çœç•¥ */
 
-/* Èæ³Ó´Ø¿ô(StringID¤¬Éä¹æÉÕ¤­À°¿ô¤Ç¡¢¤«¤Ä0°Ê¾å¤ÎÃÍ¤Ç¤¢¤ë¤³¤È¤òÁ°Äó¤È¤¹¤ë) */
+/* æ¯”è¼ƒé–¢æ•°(StringIDãŒç¬¦å·ä»˜ãæ•´æ•°ã§ã€ã‹ã¤0ä»¥ä¸Šã®å€¤ã§ã‚ã‚‹ã“ã¨ã‚’å‰æã¨ã™ã‚‹) */
 static int RGB_Table_NodeCompare(const void *va, const void *vb) {
   return (int) (((const RGB_Type *) va)->si - ((const RGB_Type *) vb)->si);
 }
 
-/* ¥Ï¥Ã¥·¥å´Ø¿ô */
+/* ãƒãƒƒã‚·ãƒ¥é–¢æ•° */
 static Hash_Size RGB_Table_NodeHash(const void *vp) {
   return (Hash_Size) ((const RGB_Type *) vp)->si;
 }
 
-/* ¥³¥Ô¡¼¥³¥ó¥¹¥È¥é¥¯¥¿ */
+/* ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 static void *RGB_Table_NodeCopy(const void *vp) {
   const RGB_Type *rp = (const RGB_Type *) vp;
   RGB_Type *ret;
@@ -269,14 +269,14 @@ static void *RGB_Table_NodeCopy(const void *vp) {
   return ret;
 }
 
-/* ¥Ç¥¹¥È¥é¥¯¥¿ */
+/* ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ */
 static void RGB_Table_NodeFree(void *vp) {
   if (vp == NULL || rgb_chunk == NULL)
     return;
   Chunk_NodeFree(rgb_chunk, vp);
 }
 
-/* ¥¤¥ó¥¹¥¿¥ó¥¹¤ÎºîÀ® */
+/* ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ä½œæˆ */
 RGB_Table *RGB_Table_Alloc(void) {
   if (rgb_chunk == NULL) {
     if ((rgb_chunk = Chunk_TypeAlloc(sizeof(RGB_Type),
@@ -286,12 +286,12 @@ RGB_Table *RGB_Table_Alloc(void) {
   return Hash_Alloc(0, 0);
 }
 
-/* ¥¤¥ó¥¹¥¿¥ó¥¹¤Î¾Ãµî */
+/* ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ¶ˆå» */
 void RGB_Table_Free(RGB_Table *rtp) {
   Hash_Free(rtp, RGB_Table_NodeFree);
 }
 
-/* RGB¾ğÊó¤ÎÃµº÷ */
+/* RGBæƒ…å ±ã®æ¢ç´¢ */
 RGB_Type *RGB_Table_Search(const RGB_Table *rtp, StringID si) {
   RGB_Type key;
 
@@ -302,7 +302,7 @@ RGB_Type *RGB_Table_Search(const RGB_Table *rtp, StringID si) {
     RGB_Table_NodeHash);
 }
 
-/* RGB¾ğÊó¤ÎÅĞÏ¿ */
+/* RGBæƒ…å ±ã®ç™»éŒ² */
 RGB_Type *RGB_Table_Insert(RGB_Table *rtp, StringID si) {
   RGB_Type rgb;
 
@@ -313,7 +313,7 @@ RGB_Type *RGB_Table_Insert(RGB_Table *rtp, StringID si) {
     RGB_Table_NodeHash, RGB_Table_NodeCopy);
 }
 
-/* ---- ¥ï¡¼¥¯¥¨¥ê¥¢ ------------------------------------------------------- */
+/* ---- ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢ ------------------------------------------------------- */
 
 static Stack_Type *mdv_work = NULL;
 
@@ -322,7 +322,7 @@ static void MDV_WorkTerm(void) {
   mdv_work = NULL;
 }
 
-/* ¥ï¡¼¥¯¥¨¥ê¥¢¤Î³ÎÊİ */
+/* ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢ã®ç¢ºä¿ */
 void *MDV_Work_Alloc(MDV_Size n) {
   void *p;
 
@@ -339,7 +339,7 @@ void *MDV_Work_Alloc(MDV_Size n) {
   return p;
 }
 
-/* ¥ï¡¼¥¯¥¨¥ê¥¢¤Î²òÊü */
+/* ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢ã®è§£æ”¾ */
 void MDV_Work_Free(void *p) {
   if (mdv_work == NULL)
     MDV_Fatal("MDV_Work_Free()");
@@ -357,20 +357,20 @@ void MDV_Work_Free(void *p) {
 #endif
 static char path_buf[MAXPATHLEN];
 
-/* ÁêÂĞpath¤«? */
+/* ç›¸å¯¾pathã‹? */
 int IsRelativePath(const char *path) {
   if (path == NULL)
     {fprintf(stderr, "IsRelativePath(): system error.\n"); exit(1);}
 
   if (DIR_SEPARATOR == '\\') {
-    /* MS-DOS¤Î¥É¥é¥¤¥Ö»ØÄê¤ËÂĞ±ş¤¹¤ë */
+    /* MS-DOSã®ãƒ‰ãƒ©ã‚¤ãƒ–æŒ‡å®šã«å¯¾å¿œã™ã‚‹ */
     if (isalpha(path[0]) && path[1] == ':')
       return 0;
   }
   return (path[0] != DIR_SEPARATOR);
 }
 
-/* path¤«¤é¤Î¥Ç¥£¥ì¥¯¥È¥êÌ¾¤ÎÀÚ¤ê½Ğ¤·(ÊÖ¤êÃÍ¤Ïstatic charÇÛÎó) */
+/* pathã‹ã‚‰ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã®åˆ‡ã‚Šå‡ºã—(è¿”ã‚Šå€¤ã¯static charé…åˆ—) */
 const char *Path2Dir(const char *path) {
   char *p;
 
@@ -385,7 +385,7 @@ const char *Path2Dir(const char *path) {
   return path_buf;
 }
 
-/* path¤«¤é¤Î¥Õ¥¡¥¤¥ëÌ¾¤ÎÀÚ¤ê½Ğ¤·(ÊÖ¤êÃÍ¤Ïstatic charÇÛÎó) */
+/* pathã‹ã‚‰ã®ãƒ•ã‚¡ã‚¤ãƒ«åã®åˆ‡ã‚Šå‡ºã—(è¿”ã‚Šå€¤ã¯static charé…åˆ—) */
 const char *Path2File(const char *path) {
   char *p;
 
@@ -401,26 +401,31 @@ const char *Path2File(const char *path) {
 
 /* ---- MDV_Fatal(), HeapError() ------------------------------------------- */
 
-/* ¥¨¥é¡¼½ªÎ» */
+/* ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 void MDV_Fatal(const char *str) {
-  fprintf(stderr,"%s: system error.\n", str);
+  fprintf(stderr,"ERROR | %s\n", str);
   exit(1);
 }
 
-/* ¥Ò¡¼¥×ÉÔÂ­¤Ë¤è¤ë¥¨¥é¡¼½ªÎ» */
+/* ã‚¨ãƒ©ãƒ¼çµ‚äº† */
+void MDV_Info(const char *str) {
+  fprintf(stderr,"INFO | %s\n", str);
+}
+
+/* ãƒ’ãƒ¼ãƒ—ä¸è¶³ã«ã‚ˆã‚‹ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 void HeapError(void) {
   fprintf(stderr,"Allocation failed.\n");
   exit(1);
 }
 
-/* ---- ²ÄÊÑÄ¹ÇÛÎó --------------------------------------------------------- */
+/* ---- å¯å¤‰é•·é…åˆ— --------------------------------------------------------- */
 
-/* ¼±ÊÌÍÑÊ¸»úÎó */
+/* è­˜åˆ¥ç”¨æ–‡å­—åˆ— */
 static const char *mdv_array_str = "MDV_Array";
 
 #define MDV_ALLOC_MIN_SIZE 1024
 
-/* ²ÄÊÑÄ¹ÇÛÎó¤Î³ÎÊİ(¼ºÇÔ¤Ï°Û¾ï½ªÎ»¡£size¤ÏÍ×ÁÇ¤ÎÂç¤­¤µ) */
+/* å¯å¤‰é•·é…åˆ—ã®ç¢ºä¿(å¤±æ•—ã¯ç•°å¸¸çµ‚äº†ã€‚sizeã¯è¦ç´ ã®å¤§ãã•) */
 MDV_Array *MDV_Array_Alloc(MDV_Size size) {
   MDV_Array *p;
 
@@ -443,7 +448,7 @@ MDV_Array *MDV_Array_Alloc(MDV_Size size) {
   return p;
 }
 
-/* ²ÄÊÑÄ¹ÇÛÎó¤Î²òÊü */
+/* å¯å¤‰é•·é…åˆ—ã®è§£æ”¾ */
 void MDV_Array_Free(MDV_Array *p) {
   if (p == NULL)
     return;
@@ -456,7 +461,7 @@ void MDV_Array_Free(MDV_Array *p) {
   return;
 }
 
-/* ²ÄÊÑÄ¹ÇÛÎó¤Î¥µ¥¤¥º¤ÎÊÑ¹¹ */
+/* å¯å¤‰é•·é…åˆ—ã®ã‚µã‚¤ã‚ºã®å¤‰æ›´ */
 void MDV_Array_SetSize(MDV_Array *p, MDV_Size n) {
   if (p == NULL || p->header_str != mdv_array_str || n < 0)
     MDV_Fatal("MDV_Array_SetSize()");
@@ -475,7 +480,7 @@ void MDV_Array_SetSize(MDV_Array *p, MDV_Size n) {
   p->n = n;
 }
 
-/* Ê¸»úÇÛÎó¤È¤ß¤Ê¤·¤Æ¥ê¥µ¥¤¥º¤¹¤ë */
+/* æ–‡å­—é…åˆ—ã¨ã¿ãªã—ã¦ãƒªã‚µã‚¤ã‚ºã™ã‚‹ */
 void _MDV_Array_Resize(MDV_Array *a, char c) {
   MDV_Size n;
 

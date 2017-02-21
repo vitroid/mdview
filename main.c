@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 
 	/* set center mass and max radius */
 	if (MDV_FileRead(mfp, 0) != MDV_READ_SUCCESS)
-		{fprintf(stderr,"Read error.(8)\n"); exit(1);}
+		{fprintf(stderr,"Error in reading the MDView file.(8)\n"); exit(1);}
 	SetCenterMass();
 
 	LoadViewParameter();
