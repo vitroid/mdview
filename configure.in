@@ -1,0 +1,76 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(main.c)
+
+PACKAGE=mdview
+MDV_VERSION=3
+MDV_REVISION=64
+MDV_FIXLEVEL=0
+VERSION=$MDV_VERSION.$MDV_REVISION.$MDV_FIXLEVEL
+
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_DEFINE_UNQUOTED(MDV_VERSION, "$MDV_VERSION")
+AC_DEFINE_UNQUOTED(MDV_REVISION, "$MDV_REVISION")
+AC_DEFINE_UNQUOTED(MDV_FIXLEVEL, "$MDV_FIXLEVEL")
+
+dnl Checks for programs.
+AC_PROG_CC
+CFLAGS="$CFLAGS -DGTK_ENABLE_BROKEN"
+if test x$CC != xgcc; then
+  CFLAGS="$CFLAGS -Wall"
+  AC_MSG_WARN(gcc is not found.)
+fi
+
+dnl Search GTK libraries and include files
+dnl AM_PATH_GTK(1.2.0,,
+dnl   AC_MSG_ERROR(Test for GTK failed. See the file 'INSTALL' for help))
+AM_PATH_GTK_2_0(,,
+  AC_MSG_ERROR(Test for GTK failed. See the file 'INSTALL' for help))
+X_LIBS=$GTK_LIBS
+X_CFLAGS=$GTK_CFLAGS
+AC_SUBST(X_LIBS)
+AC_SUBST(X_CFLAGS)
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/time.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_TYPE_OFF_T
+AC_HEADER_TIME
+AC_CHECK_SIZEOF(int,4)
+AC_CHECK_SIZEOF(long,4)
+
+dnl Checks for library functions.
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(gettimeofday strspn strstr strtod strtol strlcpy ftello)
+AC_CHECK_FUNCS(usleep select poll, break)
+
+dnl Checks for rgb.txt
+if test -r /usr/X11R6/lib/X11/rgb.txt; then
+  AC_DEFINE(RGB_FILEPATH, "/usr/X11R6/lib/X11/rgb.txt")
+elif test -r /usr/X11/lib/X11/rgb.txt; then
+  AC_DEFINE(RGB_FILEPATH, "/usr/X11/lib/X11/rgb.txt")
+elif test -r /usr/X/lib/X11/rgb.txt; then
+  AC_DEFINE(RGB_FILEPATH, "/usr/X/lib/X11/rgb.txt")
+elif test -r /usr/lib/X11/rgb.txt; then
+  AC_DEFINE(RGB_FILEPATH, "/usr/lib/X11/rgb.txt")
+elif test -r /opt/X11/share/X11/rgb.txt; then
+  AC_DEFINE(RGB_FILEPATH, "/opt/X11/share/X11/rgb.txt")
+else
+  AC_MSG_WARN(rgb.txt is not found.)
+  AC_DEFINE(RGB_FILEPATH, "")
+fi
+
+dnl Sets Output Variables
+AC_SUBST(INCS)
+
+AC_OUTPUT([
+mdview.spec
+Makefile])

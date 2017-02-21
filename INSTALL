@@ -1,0 +1,37 @@
+INSTALL
+
+  Mdview uses GTK+ libraries (Version 1.2.0 or later).
+  Before installation of mdview, check the version of GTK+, e.g.:
+
+    gtk-config --version
+
+  To build mdview, type these commands in this directory:
+
+    ./configure
+    make
+
+  The former creates the Makefile, the latter builds mdview.
+  If your 'make' command is not GNU make, use GNU make, for example:
+
+    gmake
+
+  To install mdview to /usr/local directory, type this command:
+
+    make install
+
+  If you want to uninstall mdview, type this command:
+
+    make uninstall
+
+  If you need to install other directories, use '--prefix=/directory'
+  option of the configure script. You can see other options by the
+  command:
+
+    ./configure --help
+
+  If you want to use gtk12-config instead of gtk-config, try them:
+
+    setenv GTK_CONFIG gtk12-config
+    ./configure
+    make
+

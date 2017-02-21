@@ -1,0 +1,21 @@
+This directory has the mdview software (3D molecular viewer).
+
+There are some files you should read.
+
+    INSTALL
+      Details on compiling and installing mdview.
+    mdview.1
+      The mdview manual pages.
+    ChangeLog
+      Describes changes between Version 3.50.0 and current release
+      of mdview.
+    NEWS
+    COPYING
+    AUTHORS
+
+There is a web site at http://www.chem.nagoya-u.ac.jp/bar/mdview/
+-- see that site for the latest updates.
+(However, Japanese only, now.)
+
+Report any bugs to akinori@kobe-u.ac.jp
+

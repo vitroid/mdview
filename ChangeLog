@@ -1,0 +1,294 @@
+2004-12-19  BABA Akinori <akinori@kobe-u.ac.jp>
+
+  * mdv_arg.c mdv_draw.c
+    '-povray' option was implemented.
+
+2003-09-05  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c
+    Fixed a bug about extended text format.
+
+2003-06-03  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * main.c mdv_arg.c mdview.h
+    '-loop' option was implemented.
+  * command.c gtk.c gtk_distance.c gtk_zoom.c main.c mdv.h mdv_arg.c mdview.h
+    User interface was improved.
+
+2002-09-20  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * seekfile.h seekfile.c mdview.h
+    Arbitrary step number is available.
+  * mdv_util.c
+    Fixed a bug about resizing MDV_Array.
+  * mdv_arg.c
+    Added check for -bg and -mark options.
+
+2002-09-19  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * seekfile.h
+    Fixed a bug about off_t.
+
+2002-02-22  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h mdv_arg.c mdv_atom.h mdv_atom.c mdv_draw.c mdv_stat.h mdv_util.c
+    Fixed some bugs about .inc file.
+
+2002-02-19  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * str2int.c
+    Fixed a bug about resizing hash table.
+
+2001-11-27  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c
+    Fixed a bug about reading binary data.
+
+2001-11-13  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_atom.c mdv_arg.c
+    Fixed a bug about '-bond-'.
+  * seekfile.h seekfile.c mdv_file.h mdv_file.c mdv.h mdv_arg.c
+    '-blank_line' option was implemented.
+    (2 times faster than '-blank_line-')
+  * mdv_tok.h mdv_tok.c
+    These file were created.
+    SReadToken() was implemented.
+    ReadToken() was improved. (3 times faster)
+    Fixed three bugs about '\0' and '#' and '\x1a'.
+  * seekfile.h seekfile.c
+    Large data files (over 2GB) are available.
+  * mdv_util.h mdv_util.c
+    MDV_Array*() was implemented.
+
+2001-11-09  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * seekfile.c
+    Fixed a bug about MSDOS EOF.
+
+2001-10-19  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c
+    Fixed a bug of MDV_IO_Alloc(). 
+  * mdv_util.c
+    Fixed a bug about the NUL character in ascii data files.
+
+2001-10-12  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_util.c
+    Fixed a bug about the comment character in ascii data files.
+
+2001-10-11  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_atom.h, mdv_atom.c, mdv_arg.c, mdv_data.c,
+    mdv_draw.c, mdv_file.c
+    New definition of arguments about manual bond setting
+    is implemented.
+
+2001-08-11  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c
+    Fixed a bug about reading binary data.
+
+2001-07-13  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_util.c stack.h stack.c
+    MDV_Work_Alloc(), MDV_Work_Free() was implemented.
+
+2001-07-02  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_data.c
+    Fixed a bug of MakeLines() (1 dword buffer overflow).
+
+2001-07-01  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * object.c mdv_stat.h mdv_stat.c
+    mdv.c was moved to mdv_stat.c.
+    Fixed a bug of unset_center_of_mass().
+
+2001-03-25  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * gtk.c, mdv_atom.h, mdv_atom.c, mdv_data.c, mdv_draw.c
+    Improved total speed of calculation. (about +15% of v3.59)
+
+2001-03-21  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_arg.c
+    Improbed GetArgType().
+  * mdv.c, mdv.h, mdv_arg.h
+    Fixed a bug of set_period_length9().
+    set_period_length*() -> MDV_Data_SetPeriodLength*()
+
+2001-03-16  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_arg.c, mdv_atom.h, mdv_atom.c
+    mdv_arg.c was divided into mdv_atom.h mdv_atom.c mdv_arg.c.
+
+2001-03-13  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_arg.c, mdv_data.c, mdv_draw.c, mdv_file.c
+    MDV_Atom* -> MDV_VAtomID*
+  * mdv_arg.c
+    Fixed two bugs about atom definitions.
+
+2001-03-12  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_data.c
+    Improved automatic view-port size calculation.
+    Fixed a bug of MDV_CoordCompare().
+
+2001-02-05  IWAHASHI Kensuke <ken@aqua.chem.nagoya-u.ac.jp>
+
+  * gtk.c gtkraw.c gtk_distance.c gtk_zoom.c command.c mdv_draw.c mdview.h
+    gtk.c was divided into gtkraw.c gtk_distance.c gtk_zoom.c
+  * gtk.c command.c main.c mdview.h
+    Add hidden function, "trembling".
+  * configure.in mdview.spec.in
+    Add mdview.spec.in to create mdview.spec automatically.
+  * gtkraw.c
+    Now middle button is supported again.
+
+2001-02-01  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_arg.c
+    '-atom-' was implemented.
+
+2001-01-30  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_arg.c, mdv_draw.c:
+    Improved data structures for arbitrary color definitions.
+  * gtk.c
+    Improved mdv_mapcolor().
+
+2001-01-29  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h mdv_arg.c mdv_data.c mdv_draw.c mdv_file.c:
+    Improved data structures and MakeLine() for arbitrary atom definitions.
+
+2001-01-27  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_arg.c, mdv_data.c, mdv_draw.c, chunk.h, chunk.c, hash.h, hash.c:
+    Improved data structures. Changed MAXBONDTYPE from 3 to 256.
+
+2001-01-07  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_arg.c, mdv_draw.c, mdv_util.c, str2int.h, str2int.c:
+    StringID type was implemented.
+
+2000-12-23  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_data.c, mdv_file.c:
+    Fixed a bug about execution of dynamic (datafile) arguments.
+
+2000-12-17  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_util.c, gtk_convert.c, main.c, mdv_arg.c:
+    MS-DOS directory separator supported.
+
+2000-10-31  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_arg.c, mdv_file.c:
+    Fixed some error messages.
+    Arbitrary argument length is available.
+  * gtk_layer.c:
+    Fixed a bug about updating data.
+
+2000-06-18  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_util.c
+    MS-DOS text was supported.
+
+2000-03-29  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_arg.c, mdv_draw.c, mdview.h, configure.in:
+    Unified version information.
+
+2000-03-09  IWAHASHI Kensuke <ken@aqua.chem.nagoya-u.ac.jp>
+
+  * gtk_layer.c
+    Support layer.
+
+2000-03-06  IWAHASHI Kensuke <ken@aqua.chem.nagoya-u.ac.jp>
+  * command.c:
+    Fixed verbose drawing about origin.
+
+  * gtk.c:
+    Devided into gtk.c, gtk_convert.c, gtk_info.c, gtk_mark.c and gtk_move.c.
+
+  * gtk_move.c:
+    GUI interface supports 'changing original point'.
+
+1999-12-15  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_data.c:
+    Fixed a bug about leaning periodic boundary conditions.
+
+1999-12-14  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.c, mdv_arg.c, mdv_data.c, mdv_draw.c:
+    Leaning periodic boundary conditions were implemented.
+
+1999-11-26  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c: Fixed a bug about reading binary data files.
+
+1999-11-17  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.c, mdv_arg.c, mdv_data.c, mdv_draw.c, mdv_file.c, gtk.c, command.c:
+    The 'o' command (changing original point) was appeared.
+
+  * mdv_data.c: Fixed some bugs about '-fold', '-ang' and '-au' options.
+
+1999-11-13  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * gtk.c: Fixed a bug about the information window.
+    (But, another bug remains.)
+
+  * mdv.c, mdv_arg.c, mdv_util.c, mdv_file.c, mdv_farg.c:
+    Some options are enabled in ascii data files.
+
+1999-11-05  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * Makefile.am, configure.in, aclocal.h: Add path of rgb.txt for Solaris,
+    and modified.
+
+  * mdv_data.c: Fixed a bug about drawing bonds of periodic boundary,
+    and calculation of bonds was improved. (slightly faster)
+
+1999-11-04  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_file.c: Fixed a bug about the information window.
+
+1999-10-19  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdview.1, mdview.jp.1: Added description about GTK and GDK options.
+
+1999-10-18  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv.h, mdv_arg.c mdv_data.c, mdv_draw.c, mdv_file.c, mdv_util.c:
+    Modified for arbitrary number of particles.
+    '-max 0' (means infinity) was implemented.
+
+  * mdv.h, mdv_arg.c: Modified for arbitrary number of bond types.
+    hash_int.* (my hash table) are removed.
+
+1999-10-13  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * mdv_util.h, mdv_util.c: Modified Str2Rgb(). GLib functions are used.
+    tavltree.* (my balanced binary tree) are removed.
+
+1999-10-09  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * Makefile.am: Modified man_MANS.
+
+  * gtk.c, mdview.h: Limited command line length (8 characters).
+
+1999-10-08  BABA Akinori <bar@aqua.chem.nagoya-u.ac.jp>
+
+  * Makefile.am: Added AM_CFLAGS for RGB_FILEPATH and DEFARGFILE.
+    (automake v1.4 or later is required.)
+
+  * gtk.c: Simplified KeyOperation().
+    Fixed a bug about backspace and delete key.
+    Fixed a bug about destruction sub-windows.
+

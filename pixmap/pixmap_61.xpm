@@ -1,0 +1,27 @@
+/* XPM */
+static char * pixmap_61_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"19 19 3 1",
+" 	c None",
+".	c black",
+"X	c #7373c7c77373",
+/* pixels */
+"                   ",
+"                   ",
+"     .      ....   ",
+"     ..     .XX.   ",
+"     .X.    .XX.   ",
+"     .XX.   .XX.   ",
+"     .XXX.. .XX.   ",
+"     .XXXXX..XX.   ",
+"     .XXXXXX.XX.   ",
+"     .XXXXXX.XX.   ",
+"     .XXXXXX.XX.   ",
+"     .XXXXX..XX.   ",
+"     .XXXX. .XX.   ",
+"     .XX..  .XX.   ",
+"     .X.    .XX.   ",
+"     ..     .XX.   ",
+"     .      ....   ",
+"                   ",
+"                   "};

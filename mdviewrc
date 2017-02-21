@@ -1,0 +1,11 @@
+-ang                              # angstrom
+-atom O 15.9994 0.18  \#FF3030    # oxygen (firebrick1)
+-atom H 1.00794 0.108 \#00BFFF    # hydrogen (DeepSkyBlue)
+-bg \#000000                      # background color (black)
+-bond O-H  1.244334 \#FFFFFF      # covalent bond (white)
+-bond O--H 2.201514 \#416BE1      # hydrogen bond (RoyalBlue)
+-count O H- 2 \#BEBEBE \#FFD700   # color of oxygen which has illegal
+                                  #   number of covalent bonds (gray,gold)
+-format 'O(n)H(m)'                # format of data files
+-mark \#FFB6C1                    # marking color (LightPink)
+-au                               # atomic unit

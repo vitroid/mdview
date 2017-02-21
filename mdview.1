@@ -1,0 +1,705 @@
+.TH MDVIEW 1 "December\ 19,\ 2004"
+.SH NAME
+mdview \- GUI program for displaying various molecular models
+.SH SYNOPSIS
+.B mdview [\-f
+.I ArgFile
+.B ] [
+.I Options...
+.B ] {\-format
+.I String
+.B [
+.I Values...
+.B ] | \-format-}
+.I DataFile
+.SH DESCRIPTION
+.B Mdview
+displays various collective molecules on a screen 3-dimensionally.
+.PP
+Bonds are produced from atomic configuration automatically.
+.B Mdview
+can animate, translate, rotate, magnify and reduce molecular models.
+Displayed graphics can be converted into 
+.I POV-Ray
+File.
+.PP
+.I ArgFile
+specifies an argument file.
+.PP
+.I Option
+specifies option arguments.
+.PP
+.I Value
+is a variable number that is set in
+.B \-format
+option.  The order of substitution is the one appeared in the
+.B \-format
+formula (specifying variable name in substitutions is not supported
+now).
+.PP
+.B DataFile
+specifies data file name.  In ver. 3.20 and later version,
+enhanced data file is supported with
+.B \-format-
+option.
+.PP
+.B \-format
+or
+.B \-format-
+option is required.
+.PP
+If inconsistent options are set, later one is varid.
+It is convenient to use an argument file
+when option arguments are used frequently. 
+.PP
+.SS OPTIONS
+Following option arguments are available.
+.TP
+.B \-ang
+Set unit of following arguments and data files to angstrom
+(cf.
+.B \-au
+).
+.TP
+.BI \-arg\  Version
+Specify the version of arguments.  When 3.23 is set, definition of the
+.B \-bond
+option is changed.  If 3.60 is set, definition of
+.B \-bond
+,
+.B \-count
+options are changed.  Default version is
+.I 3.00.
+.TP
+\fB\-atom \fIName Mass Radius Color\fR
+Register or change the information of
+.I Name
+atom.
+.I Name
+is a name of atom.  Start with a capital, and lowercase(s) follows
+if need (O H Na Osc is OK, but ATOM H+ is not good).
+
+.I Mass
+is mass of atom.  Any unit system is acceptable.
+(default unit is
+.I amu
+).
+
+.I Radius
+is a radius of atom.  Unit of radius is set with
+.B \-au
+or
+.B \-ang.
+
+.I Color
+is a color of atom.  Specify color name with strings (cf. rgb.txt).
+Hex expression (ex. #FF00FF) is also acceptable.
+
+Definition of any atoms are required in current version.
+.TP
+.BI \-atom-\  Name
+Cancel any setting of
+.I Name
+atoms.
+.TP
+.B \-au
+Set unit of following arguments and data files to atomic unit.
+This is default (cf. 
+.B \-ang
+).
+.TP
+.BI \-bg\  Color
+Specify background color of window.
+Default value is
+.I black.
+.TP
+.B \-blank_line
+Any blank line (contents white space and tab characters only)
+separates the steps of ASCII data files.
+It is faster than
+.B \-blank_line-
+option.
+.TP
+.B \-blank_line-
+Disable
+.B \-blank_line
+option. This is default.
+.TP
+\fB\-bond \fIName-Name Length Color \fR(Ver.3.00)
+.PD 0
+.TP
+\fB\-bond \fIName-Name Length Radius Color \fR(Ver.3.23)
+.PD 0
+.TP
+\fB\-bond \fIName-Name Length Name \fR(Ver.3.60)
+.PD
+Set the bond connecting with 1st
+.I Name
+and 2nd
+.I Name.
+The bond is specified with names of atoms that is linked with hyphen.
+The hyphen number is variable, and much hyphens express a longer bond.
+(A limit of hyphen number is 256).
+
+.I Length
+is bond length.  When the distance between atoms is short, a bond
+is created.  Unit of length is set with
+.B \-au
+or
+.B \-ang.
+
+The definition of latter arguments depend on the
+.B \-arg
+option.
+
+.I Color
+is a color of bonds.  Specify this as same as
+.B \-atom
+option.
+
+.I Radius
+is thickness of bonds (radius of tubes).  This value is only valid
+to
+.I POV-Ray
+output.
+
+The third
+.I Name
+is a shape of the bond that is named by
+.B \-bond_shape
+option.
+.TP
+.BI \-bond-\  Name-Name
+Cancel any setting of
+.I Name\-Name
+bonds.
+.TP
+\fB\-bond_shape \fIName Radius Color\fR
+Set the shape of bond named
+.I Name.
+
+.I Radius
+is thickness of bonds (radius of tubes).  This value is only valid
+to
+.I POV-Ray
+output.
+
+.I Color
+is a color of bonds.  Specify this as same as
+.B \-atom
+option.
+.TP
+.B \-c
+.PD 0
+.TP
+.B \-clear
+.PD
+Draw outline of atoms.  This option makes a bit slow.
+.TP
+.B \-c-
+.PD 0
+.TP
+.B \-clear-
+.PD
+Don't draw outline of atoms.  This is default.
+.TP
+\fB\-center \fIX Y Z\fR
+Set the center of window to (
+.I X,
+.I Y,
+.I Z
+) instead of the center of mass.
+.TP
+.B \-center-
+Set the center of window to the center of mass.  This is default.
+.TP
+.BI \-color\  Level
+Set the number of colors used to express depth.
+.I Level
+is the number from
+.I 0
+to
+.I 9.
+Large number cause more smooth gradation.
+The default value is
+.I 1.
+.TP
+\fB\-count \fIName Name- Total Color_L Color_H \fR(Ver.3.00)
+.PD 0
+.TP
+\fB\-count \fIName Total Color_L Color_H \fR(Ver.3.60)
+.PD
+Set color of
+.I Name
+atoms.  If the number of bonds with
+.I Name-
+is less than
+.I Total,
+atoms are colored with
+.I Color_L.
+If the number is more than
+.I Total,
+atoms with
+.I Color_H.
+.TP
+.BI \-count-\  Name
+Cancel the setting of
+.B \-count
+on
+.I Name
+atoms.
+.TP
+\fB\-count_n \fIName Name Count\fR
+Count the bond connecting with 1st
+.I Name
+and 2nd
+.I Name.
+
+.I Count
+is a number.
+.TP
+.BI \-d\  Number
+Set length from molecules to view point.
+The value is a magnification of the molecular group radius,
+.I 10
+by default.
+Smaller value inclease a sense of perspective, and
+larger value express a more exact sence of distance.
+.TP
+\fB\-e \fITheta Psi Phi\fR
+.PD 0
+.TP
+\fB\-euler \fITheta Psi Phi\fR
+.PD
+Set initial display angle with euler angle.
+The unit is degree (360 degree in a round) and argument order is
+theta, psi, phi.  Integer value is required.
+The default values are
+.I 0
+degree each, the view point is on z axis (by default, x axis is right,
+and y is up, z is obeying right hand rule).
+.TP
+.BI \-frame\  Number
+Set the maximum frame number per a second.
+Available value is only
+.I 8,
+.I 10,
+.I 12,
+.I 15,
+.I 24,
+.I 30,
+.I 0.
+.I 0
+indicates no restriction.  The default value is
+.I 0.
+.TP
+.B \-fold
+Fold the edge of data automatically when using periodic boundary
+condition.
+.TP
+.B \-fold-
+Don't
+.B \-fold.
+This is default.
+.TP
+\fB\-format \fIString
+Configure the format of a data file.
+Definition is like a molecular formula:
+.nf
+    \-format\  CH4
+.fi
+indicates 1st row is C atom, and 2nd to 4th row is H atom.
+A data file should  be in this form (and its repeat).
+Following complex formula is also acceptable:
+.nf
+    \-format\  '(NH2)2CO'.
+.fi
+In this case, the order of data is N-H-H-N-H-H-C-O
+(single quotations are required for parenthesis
+not to be recognized by a shell).
+You can use not only numbers but integer variables to use one
+.B \-format
+with various number atomic/molecular number.  Each variable name
+should be a lowercase character.  The four rules of arithmetic
+operations are also available like this:
+.nf
+    \-format\  'C(n)H(2n+2)'.
+.fi
+In this case with n=3, the value is C3H8.  You should avoid
+resulting repeat number to be 0.
+.TP
+.B \-format-
+Use extended data file format.  See `Data file format' for details.
+.TP
+.B \-help
+.PD 0
+.TP
+.B --help
+.PD
+Display help and exit.
+.TP
+.BI \-layer\    "Name NumberList"
+Set layer name and its atoms.  See below how to write 'NumberList'.
+.TP
+.BI \-layer-\    Name
+Remove layer whose name is 'Name'.
+.TP
+.B  \-layer_kill
+Remove all of layers.
+.TP
+.BI \-length\  Length
+.PD 0
+.TP
+.BI \-length\  '(X,Y,Z)'
+.TP
+.BI \-length\  '(XX,XY,XZ,YX,YY,YZ,ZX,ZY,ZZ)'
+.PD
+Assume periodic boundary condition.  In the first expression,
+cell is a
+.I Length
+by
+.I Length
+by
+.I Length
+cube.
+In the second form, cell is
+.I X
+by
+.I Y
+by
+.I Z
+rectangular parallelepiped.
+In the last form, cell is
+.I (XX, XY, XZ)
+by
+.I (YX, YY, YZ)
+by
+.I (ZX, ZY, ZZ)
+parallelepiped.
+if
+.I 0
+is given, that axis have no periodic boundary.
+.TP
+.B \-length-
+Remove periodic boundary condition, or treat as a cluster.
+This is default.
+.TP
+.B \-loop
+Loop a trajectory.
+.TP
+.B \-loop-
+Disable loop setting.
+This is default.
+.TP
+.BI \-max\  Particles
+Set maximum number of perticles in using
+.B \-format-
+option.
+.I 0
+indicates infinity.  The default value is
+.I 0.
+.TP
+.BI \-mark\  Color
+Set color of marked (press mark buttom in the screen, or 
+p-command following a number) atom.
+.TP
+.B \-multi
+Enable multiple marking.
+.TP
+.B \-multi-
+Disable multiple marking.  This is default.
+.TP
+.BI \-povray\  Version
+Specify the version of POV-Ray.  Default version is
+.I 3.0.
+.TP
+.BI \-range\  Length
+Set displaying range.  When the value is
+.I 0,
+range is set by input data automatically (default).
+.TP
+.B \-version
+.PD 0
+.TP
+.B --version
+.PD
+Display version information and exit.
+.TP
+.BI \-visible\  Name[,Name[,...]]
+Layers whose name match
+.I Name
+are visible, and others are invisible.
+.TP
+.BI \-w\  Number
+.PD 0
+.TP
+.BI \-window\  Number
+.PD
+Set window size.  The default value is
+.I 400.
+.SS GTK and GDK Options
+Some options peculiar to GTK and GDK are valid.
+These can't written in the argument file.
+.TP
+.BI --display\  host:dpy
+Display on remote host.  Default is
+.I $DISPLAY.
+.SS Argument file
+Any command-line arguments can be written in `Argument file.'  Use
+.B \-f
+option followed by file name and it specifies all arguments in the file.
+
+File format is almost as same as command-line arguments, but 
+some definitions are changed.
+.IP o
+Return codes and tab characters are recognized as spaces.
+.IP o
+Backslash characters escapes special meanings and treating as
+normal characters.
+.IP o
+Characters (without return-code)  quoted by single-quote ' 
+are escaped.
+.IP o
+# is taken to begin a comment.
+.IP o
+Kanji characters are allowed only in comments.
+.IP o
+Control-characters like ^L, ^M, ^Z are also forbidden.
+.IP o
+Following characters have special meanings in shells, and 
+should be escaped with back-slash etc.
+
+" ( ) ? * < > | & ; ` ! $ ~
+.PP
+Unless the first argument is
+.B \-f,
+the configuration file
+.I \&.mdviewrc
+or
+.I mdview.arg
+in current or home directory will be load if exist.
+If they don't exist, system configuration file (
+.I /usr/local/share/mdview/mdviewrc
+by default) will be load (System mdviewrc by default is for
+water molecules.  Change it if need.)
+
+.B \-f
+option after some arguments can be specified, which adds
+options in the file.  And
+.B \-f
+option can be in a argument file.
+.SS NumberList
+Numbers are separated by comma.  If you want to describe continuous numbers,
+such as 1,2,3, it is posible to use hyphen, i.e. 1-3.
+Extra space characters are allowed.
+So if you want to use them, quotations may be needed.
+For example, if you want to describe 1, 3, 4, 7, 8, 9 and 10,
+you can describe following:
+.sp
+.nf
+      1,3,4,7,8,9,10
+.fi
+.sp
+or
+.sp
+.nf
+      1,3,4,7-10
+.fi
+.sp
+First number of 'NumberList' is 1, not 0.
+.SS Data File
+There are two types of files, ASCII and FORTRAN UNFORMATTED binary.
+.B Mdview
+has no limit in particle numbers within memory size.
+
+ASCII data  files should contain only atomic configuration data
+in order of x, y, z.  Bonds are produced automatically from the length
+between atoms.
+
+Each line contains an atomic x, y, z coordinate, delimitted by
+space.
+The order of the line should be described in
+.B \-format
+option.  If a data have more than one step, same format can be
+followed.
+# can be used to make a comment. These comments are displayed in
+.B [Info]
+window.
+
+For FORTRAN's UNFORMATTED binary files, each record have
+3 double precision (8 byte floating) matrices (x, y, z) of one step
+should be written like this:
+.sp
+.nf
+    double precision x(n),y(n),z(n)
+    write(num) x,y,z
+.fi
+.sp
+The order of elements in a record is as same as ASCII format.
+If a data have more than one step, same format can be followed.
+.SS Extended Data File
+To display the system whose number or sort of atoms changes in
+each steps, extended data file format is prepared.
+To use this type file,
+.B \-format-
+option is required.  Each data file should be ASCII type and
+data of one step is written like this:
+.sp
+.nf
+    (Arguments (strings) \&...)
+    Number_of_perticles (integer)
+    Name_of_atom(string) x(number) y(number) z(number)
+    \&... Repeat number-of-perticle times.
+.fi
+.sp
+To set some bonds between atoms manually, its extension
+is available.
+.sp
+.nf
+    (Arguments (strings) \&...)
+    Number-of-perticles(integer) Number-of-bonds(integer)
+    Name-of-atom(string) x(number) y(number) z(number)
+    \&... Repeat number-of-perticle times.
+    Name-of-shape-of-bond(string) perticle(number) perticle(number)
+    \&... Repeat number-of-bond times.
+.fi
+.sp
+Maximum number of perticles is defined in
+.B \-max
+option.
+If a data have more than one step, same format can be followed.
+# can be used to make a comment. These comments are displayed in
+.B [Info]
+window.
+The following arguments are available at extended data files.
+.sp
+.B \-au, \-ang, \-center, \-center-, \-d, \-euler, \-fold, \-fold-,
+.B \-length, \-length-, \-range
+.SS How to manipulate
+.B mdview
+offers user interface with mouse and keyboard.
+
+General operation with mouse is omitted for simplicity.
+.PP
+(In the window displaying perticles)
+.TP
+Left drag:
+Translate view range (Translation mode).
+
+Rotate collective molecules (Rotation mode).
+.TP
+Left double click:
+Reset view range to original point (Translation mode).
+
+Reset view angle to original (Rotation mode).
+.TP
+Center click:
+Mark/unmark a particle.
+.TP
+Right click:
+Show information (number, xyz configuration) of a particle
+the pointer indicate.
+.PP
+Key binds are following:
+Commands with * can following a number.
+.RS
+.TP
+.B j +
+*Proceed 1 step.
+.TP
+.B k \-
+*Go back 1 step.
+.TP
+.B f SPACE
+*Proceed 25 steps.
+.TP
+.B b
+*Go back 25 steps.
+.TP
+.B e / s
+Proceed to the end / Go back to the start.
+.TP
+.B g / G
+*Jump to the start / the end (or a given number).
+.TP
+.B z / Z
+Reduce / Magnify the model.
+.TP
+.B a / d / w / x
+Rotate 1 degree to left / right / up / down (uppercase character
+cause 10 degrees rotation).
+.TP
+.B t
+Rotate a round.
+.TP
+.B %
+*Magnify / reduce to [Number]%.
+.TP
+.B p
+*Mark the [Number]th atom.
+.TP
+.B v
+*Move to the [Number]th atom.
+.TP
+.B V
+Move to the marked atom.
+.TP
+.B o
+*Set original point to the [Number]th atom.
+.TP
+.B q Q
+Quit.
+.RE
+.PP
+Any actions can be stopped with Ctrl-c.
+.SS Conversion to POV-Ray file
+To click
+.B [Convert]
+buttom in the window will record a displayed graphics into
+POV-Ray format file.
+
+In the first conversion, 
+.I *.pov
+file and 
+.I *.inc
+file will be created.
+.I *.inc
+file describes general settings (ex. looks) extracted from
+.I *.pov.
+.I *.inc can be shared for the system with different number of atoms
+if the system consists of same atoms, bonds and colors.
+
+In the case of ray-tracing the file
+.I test.pov,
+input like this (
+.I *.inc
+file will be included in
+.I *.pov
+file):
+.sp
+.nf
+povray +D0 +P +X +A +W400 +H400 +Itest.pov
+.fi
+.sp
+Numerical data written in
+.I *.pov
+file is consistent to input data file (Ver. 3.11 or later).
+.SH FILES
+.I \&./\&.mdviewrc
+.br
+.I \&./mdview.arg
+.br
+.I ${HOME}/\&.mdviewrc
+.br
+.I ${HOME}/mdview.arg
+.br
+.I /usr/local/share/mdview/mdviewrc
+.SH COPYRIGHT
+.B mdview
+is Copyright (C) 1995, 2004 Akinori BABA (akinori@kobe-u.ac.jp).
+.SH AUTHORS
+Akinori BABA (akinori@kobe-u.ac.jp)
+.br
+Kensuke IWAHASHI (iwahashi@ims.ac.jp)
+.SH SEE ALSO
+povray(1)

@@ -1,0 +1,60 @@
+New in v3.64.0: (2004/12/19)
+  * -povray is available.
+
+New in v3.63.0: (2003/ 6/ 3)
+  * -loop is available.
+
+New in v3.62.0: (2002/ 9/20)
+  * Arbitrary step number is available.
+
+New in v3.61.0: (2001/11/14)
+  * Large data files over 2GB are available (if your environment
+    is supported).
+  * The performance of disk access was improved.
+  * -blank_line is available.
+
+New in v3.60.0: (2001/10/12)
+  * Definition of some arguments is updated.
+    If '-arg 3.60' is appeared, the new definition is enabled.
+  * Manual bond settings are enabled in ascii data files.
+
+New in v3.59.1: (2001/ 5/10)
+  * Performance of total calculation was improved.
+
+New in v3.59.0: (2001/ 3/16)
+  * GUI was improved.
+
+New in v3.58.0: (2001/ 2/ 1)
+  * Arbitrary atom settings are available.
+  * -atom- is available.
+
+New in v3.57.0: (2000/12/17)
+  * MS-DOS directory separator is available. (use DIR_SEPARATOR)
+
+New in v3.56.0: (2000/10/31)
+  * Arbitrary argument length is available.
+
+New in v3.55.0: (2000/ 3/29)
+  * -layer is available.
+
+New in v3.54.0: (1999/12/14)
+  * Leaning periodic boundary conditions are available.
+
+New in v3.53.0: (1999/11/17)
+  * 'o' command (changing original point) is available.
+
+New in v3.52.0: (1999/11/13)
+  * Some options are enabled in ascii data files.
+
+New in v3.51.1: (1999/11/08)
+  * Caluculation of bonds was improved.
+
+New in v3.51.0: (1999/10/18)
+  * -max 0 (infinity) is available.
+  * reduction of memory.
+
+New in v3.50.1: (1999/10/09)
+  * Configure scripts are improved.
+
+New in v3.50.0: (1999/10/07)
+  * GUI was improved by GTK+.
