@@ -96,7 +96,8 @@ static GtkWidget *radiobutton_translation = NULL;
 static GtkWidget *radiobutton_rotation = NULL;
 static GSList *list_tooltips = NULL;
 static GdkColor **mdv_color = NULL;
-static GdkGC *gc = NULL;
+//static GdkGC *gc = NULL;
+static cairo_t *cr;
 static GdkPixmap *pixmap_screen = NULL;
 static GdkPixmap *gpixmap[6][4];
 static GdkBitmap *gmask[6][4];
@@ -123,22 +124,13 @@ void GuiInitialize(int *pargc, char **argv) {
 	gtk_init(pargc, &argv);
 	return;
 }
+#define mdv_set_foreground(cr, color)  cairo_set_source_rgb(cr, mdv_color[(color)]->red/65536, mdv_color[(color)]->green/65536, mdv_color[(color)]->blue/65536)
 
-#define mdv_draw_rectangle(x, y, w, h, color, filled) \
-( \
-	gdk_gc_set_foreground(gc, mdv_color[(color)]), \
-	gdk_draw_rectangle(pixmap_screen, gc, (filled), (x), (y), (w), (h)) \
-)
-#define mdv_draw_oval(x, y, w, h, color, filled) \
-( \
-	gdk_gc_set_foreground(gc, mdv_color[(color)]), \
-	gdk_draw_arc(pixmap_screen, gc, (filled), (x), (y), (w), (h), 0, 360*64) \
-)
-#define mdv_draw_line(x, y, w, h, color) \
-( \
-	gdk_gc_set_foreground(gc, mdv_color[(color)]), \
-	gdk_draw_line(pixmap_screen, gc, (x), (y), (w), (h)) \
-)
+#define mdv_draw_rectangle(x, y, w, h, color, filled) ( mdv_set_foreground(cr, color),  cairo_rectangle(cr, (x), (y), (w), (h)) )
+
+#define mdv_draw_oval(x, y, w, h, color, filled) ( mdv_set_foreground(cr, color) ) //, cairo_arc(cr, (x), (y), (w), (h), 0, 360*64) )
+
+#define mdv_draw_line(x, y, w, h, color) ( mdv_set_foreground(cr, color), cairo_move_to(cr, x, y), cairo_line_to(cr, x+w, y+h), cairo_stroke (cr)  ) 
 
 void DrawObject(void) {
   static int init = 0;
@@ -181,8 +173,7 @@ void DrawObject(void) {
 
   /* clean */
   color = GetBackGroundColor();
-  mdv_draw_rectangle(0, 0, draw->allocation.width, draw->allocation.height,
-    color, TRUE);
+  mdv_draw_rectangle(0, 0, draw->allocation.width, draw->allocation.height, color, TRUE);
 
   /* draw all primitives */
   dp = drawlist;
@@ -244,10 +235,13 @@ void Redraw(void) {
       GetTimeval(&sec, &usec);
       if ((sec - comment_string_sec)*1000000 + (usec - comment_string_usec)
           < COMMENT_STRING_TIMEOUT_USEC) {
-        gdk_gc_set_foreground(gc, mdv_color[MDV_COLOR_WHITE]);
+        mdv_set_foreground(cr, MDV_COLOR_WHITE);
+	fprintf(stderr,"Probe 1\n");
         x = draw->allocation.width - gdk_string_width(font, comment_string);
         y = draw->allocation.height - gdk_string_height(font, comment_string);
-        gdk_draw_string(draw->window, font, gc, x, y, comment_string);
+	cairo_move_to(cr, x,y);
+	cairo_show_text(cr, comment_string);
+        //gdk_draw_string(draw->window, font, gc, x, y, comment_string);
       }
     }
   }
@@ -503,6 +497,7 @@ void CreateGui(void) {
 	gtk_signal_connect(GTK_OBJECT(entry_step), "activate",
 			GTK_SIGNAL_FUNC(cb_entry_activate), NULL);
 	gtk_entry_set_text(GTK_ENTRY(entry_step), "1");
+	fprintf(stderr,"Probe 4\n");
 	GTK_ENTRY_FIT(GTK_ENTRY(entry_step), "1");
 	gtk_widget_show(entry_step);
 	tooltips = gtk_tooltips_new();
@@ -842,6 +837,7 @@ void CreateGui(void) {
 	/*
 	 * label2b1 on table2b
 	 */
+	fprintf(stderr,"Probe 2\n");
 	label2b1 = gtk_label_new("theta");
 #if 0
 	gtk_widget_set_name(label2b1, "symbol font");
@@ -1330,7 +1326,8 @@ void CreateGui(void) {
 	/*
 	 * Create GC
 	 */
-	gc = gdk_gc_new(window_main->window);
+	//gc = gdk_gc_new(window_main->window);
+	cr = gdk_cairo_create(window_main->window);
 	/*
 	 * Set title
 	 */
@@ -1370,6 +1367,7 @@ static gint button_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
   ox = win_w*0.5;
   oy = win_h*0.5;
   coef = ((win_w < win_h)? win_w: win_h) * GetZoomPercent();
+  fprintf(stderr,"Probe 3\n");
   if (font == NULL) {
     font = gdk_font_load("-adobe-helvetica-medium-r-normal--14-*-*-*-*-*-*-*");
     if (font == NULL)

@@ -1,4 +1,4 @@
-/* "seekfile.c" ¥·¡¼¥¯°ÌÃÖµ­²±·¿¥Õ¥¡¥¤¥ë v1.10 */
+/* "seekfile.c" ã‚·ãƒ¼ã‚¯ä½ç½®è¨˜æ†¶å‹ãƒ•ã‚¡ã‚¤ãƒ« v1.10 */
 
 #include <stdio.h>     /* ftell(), fseek() */
 #include <stdlib.h>
@@ -6,7 +6,7 @@
 #include <sys/stat.h>  /* stat() */
 #include "seekfile.h"
 
-/* ==== privateÀë¸À ======================================================== */
+/* ==== privateå®£è¨€ ======================================================== */
 
 #if HAVE_FTELLO
 # define Seek_Ftell(p)       ftello(p)
@@ -17,22 +17,22 @@
 #endif
 
 #define SEEK_FILE_MAX 16
-#define SEEK_STEP_MAX 0 /* 0¤ò»ØÄê¤¹¤ë¤ÈÌµÀ©¸Â¤È¤Ê¤ë */
+#define SEEK_STEP_MAX 0 /* 0ã‚’æŒ‡å®šã™ã‚‹ã¨ç„¡åˆ¶é™ã¨ãªã‚‹ */
 
-/* SeekCacheType·¿ */
+/* SeekCacheTypeå‹ */
 static SeekCacheType *SeekCacheAlloc(const SeekFileDataFunc *);
 static void SeekCacheFree(SeekCacheType *cp);
 static int  SeekCacheSave(SeekCacheType *cp, const void *val, SeekSize step);
 static int  SeekCacheLoad(const SeekCacheType *cp, void *val, SeekSize step);
 static void SeekCacheClear(SeekCacheType *cp);
 
-/* SeekPosType·¿ */
+/* SeekPosTypeå‹ */
 static void SeekInitPos(SeekFILE *sfp);
 static void SeekTermPos(SeekFILE *sfp);
 static off_t SeekSetPos(SeekFILE *sfp, SeekSize step, off_t val);
 static off_t SeekGetPos(SeekFILE *sfp, SeekSize step);
 
-/* ==== publicÄêµÁ ========================================================= */
+/* ==== publicå®šç¾© ========================================================= */
 
 static int _seek_file_init = 0;
 static SeekFILE _seek_file[SEEK_FILE_MAX];
@@ -40,7 +40,7 @@ static SeekFILE _seek_file[SEEK_FILE_MAX];
 static int SeekGetFileID(const SeekFILE *sfp);
 #define _SeekFileIsActive(i) (_seek_file[i].path != NULL)
 
-/* SeekFILE¥·¥¹¥Æ¥à¤Î½é´ü²½ */
+/* SeekFILEã‚·ã‚¹ãƒ†ãƒ ã®åˆæœŸåŒ– */
 static void SeekFileInit(void) {
   int i;
 
@@ -51,7 +51,7 @@ static void SeekFileInit(void) {
   _seek_file_init = 1;
 }
 
-/* SeekFILE·¿¤ò³«¤¯¡£data¤Ï°·¤¦¥Ç¡¼¥¿¤Î¥á¥ó¥Ğ´Ø¿ô¡£¼ºÇÔ¤ÏNULL¤òÊÖ¤¹ */
+/* SeekFILEå‹ã‚’é–‹ãã€‚dataã¯æ‰±ã†ãƒ‡ãƒ¼ã‚¿ã®ãƒ¡ãƒ³ãƒé–¢æ•°ã€‚å¤±æ•—ã¯NULLã‚’è¿”ã™ */
 SeekFILE *SeekFileOpen(const char *path, const SeekFileDataFunc *vf,
     int (*vf_Read)(struct _SeekFILE *, void *, off_t), void *dp) {
   SeekFILE *sfp;
@@ -72,9 +72,9 @@ SeekFILE *SeekFileOpen(const char *path, const SeekFileDataFunc *vf,
   sfp->vf_Read = vf_Read;
   sfp->dp = dp;
   if (stat(path, &st) != 0)
-    {fprintf(stderr, "\"%s\": Read error.(1)\n", path); return NULL;}
+    {fprintf(stderr, "\"%s\": File not found.(1)\n", path); return NULL;}
   if ((sfp->fp = fopen(path, "r")) == NULL)
-    {fprintf(stderr, "\"%s\": Can't open.(4)\n", path); return NULL;}
+    {fprintf(stderr, "\"%s\": Can't open the file.(4)\n", path); return NULL;}
   sfp->size = st.st_size;
   sfp->time = st.st_mtime;
   SeekInitPos(sfp);
@@ -88,7 +88,7 @@ SeekFILE *SeekFileOpen(const char *path, const SeekFileDataFunc *vf,
   return sfp;
 }
 
-/* ¥Õ¥¡¥¤¥ë¤ò(¤â¤·¹¹¿·¤µ¤ì¤Æ¤¤¤¿¤é)ÆÉ¤ßÄ¾¤¹¡£(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’(ã‚‚ã—æ›´æ–°ã•ã‚Œã¦ã„ãŸã‚‰)èª­ã¿ç›´ã™ã€‚(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 int SeekFileReload(SeekFILE *sfp) {
   struct stat st;
 
@@ -96,28 +96,28 @@ int SeekFileReload(SeekFILE *sfp) {
     {fprintf(stderr, "\"%s\": Read error.(3)\n", sfp->path); return 0;}
 
   if (st.st_mtime == sfp->time || st.st_size == sfp->size)
-    return 1; /* ÆÉ¤ßÄ¾¤·ÉÔÍ× */
+    return 1; /* èª­ã¿ç›´ã—ä¸è¦ */
   if (st.st_size < sfp->size)
     {fprintf(stderr, "\"%s\": Illegal modification.\n", sfp->path); return 0;}
 
-  /* ÆÉ¤ßÄ¾¤¹ */
+  /* èª­ã¿ç›´ã™ */
   fclose(sfp->fp);
   if ((sfp->fp = fopen(sfp->path, "r")) == NULL)
     {fprintf(stderr, "\"%s\": Can't reopen.\n", sfp->path); return 0;}
   sfp->size = st.st_size;
   sfp->time = st.st_mtime;
 
-  /* ¥·¡¼¥¯ */
+  /* ã‚·ãƒ¼ã‚¯ */
   if (!SeekPositionMove(sfp, sfp->pos.i))
     return 0;
   if (sfp->pos.max >= 0 && sfp->pos.i >= sfp->pos.max)
-    SeekCacheClear(sfp->cache); /* ¤È¤ê¤¢¤¨¤º´°Á´¤Ë¥¯¥ê¥¢¤¹¤ë */
+    SeekCacheClear(sfp->cache); /* ã¨ã‚Šã‚ãˆãšå®Œå…¨ã«ã‚¯ãƒªã‚¢ã™ã‚‹ */
   sfp->pos.max = -1;
 
   return 1;
 }
 
-/* ¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤ë */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹ */
 void SeekFileClose(SeekFILE *sfp) {
   if (!_seek_file_init)
     SeekFileInit();
@@ -133,7 +133,7 @@ void SeekFileClose(SeekFILE *sfp) {
   sfp->path = NULL;
 }
 
-/* MSDOS¤ÎEOF¤ËÂĞ±ş¤·¤¿feof */
+/* MSDOSã®EOFã«å¯¾å¿œã—ãŸfeof */
 static int _feof(FILE *fp) {
   int c;
 
@@ -144,7 +144,7 @@ static int _feof(FILE *fp) {
   return (c == '\x1a');
 }
 
-/* ¥Õ¥¡¥¤¥ësfp¤«¤éstepÈÖÌÜ¤Î¥Ç¡¼¥¿¤òÆÉ¤à */
+/* ãƒ•ã‚¡ã‚¤ãƒ«sfpã‹ã‚‰stepç•ªç›®ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€ */
 int SeekFileRead(SeekFILE *sfp, void *val, SeekSize step) {
   if (SeekGetFileID(sfp) < 0)
     {fprintf(stderr, "SeekFileRead(): Illegal argument.\n"); return 0;}
@@ -156,12 +156,12 @@ int SeekFileRead(SeekFILE *sfp, void *val, SeekSize step) {
   if (step >= SEEK_STEP_MAX) {
     int ret;
 
-    ret = SeekFileRead(sfp, val, SEEK_STEP_MAX-1); /* ºÆµ¢¸Æ¤Ó½Ğ¤· */
+    ret = SeekFileRead(sfp, val, SEEK_STEP_MAX-1); /* å†å¸°å‘¼ã³å‡ºã— */
     return (ret == SEEK_READ_SUCCESS)? SEEK_READ_OVERFLOW: ret;
   }
 #endif
 
-  /* ¥­¥ã¥Ã¥·¥å¤ÎÍøÍÑ */
+  /* ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®åˆ©ç”¨ */
   if (SeekCacheLoad(sfp->cache, (void *) val, step))
     return SEEK_READ_SUCCESS;
 
@@ -175,7 +175,7 @@ int SeekFileRead(SeekFILE *sfp, void *val, SeekSize step) {
     }
   }
 
-  /* ¥Ç¡¼¥¿ÆÉ¤ß¹ş¤ß */
+  /* ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ */
   while (step >= sfp->pos.i) {
     off_t len;
 
@@ -204,18 +204,18 @@ int SeekFileRead(SeekFILE *sfp, void *val, SeekSize step) {
 
   }
 
-  /* ¥­¥ã¥Ã¥·¥ó¥°¤¹¤ë */
+  /* ã‚­ãƒ£ãƒƒã‚·ãƒ³ã‚°ã™ã‚‹ */
   SeekCacheSave(sfp->cache, (const void *) val, step);
 
   return SEEK_READ_SUCCESS;
 }
 
-/* ºÇÂç¤Î¥¹¥Æ¥Ã¥×¿ô¤òÊÖ¤¹(ÉÔÌÀ¤Î»ş¤ÏÉé¤òÊÖ¤¹) */
+/* æœ€å¤§ã®ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚’è¿”ã™(ä¸æ˜ã®æ™‚ã¯è² ã‚’è¿”ã™) */
 SeekSize SeekMaxStep(const SeekFILE *sfp) {
   return (SeekGetFileID(sfp) < 0)? -1L: sfp->pos.max;
 }
 
-/* SeekFILE¥İ¥¤¥ó¥¿¤«¤éID¤òÆÀ¤ë(°Û¾ï¤Ê¤éÉé¤òÊÖ¤¹) */
+/* SeekFILEãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰IDã‚’å¾—ã‚‹(ç•°å¸¸ãªã‚‰è² ã‚’è¿”ã™) */
 static int SeekGetFileID(const SeekFILE *sfp) {
   int i;
 
@@ -225,7 +225,7 @@ static int SeekGetFileID(const SeekFILE *sfp) {
   return (i >= SEEK_FILE_MAX)? -1: i;
 }
 
-/* sfp¤Î¸½ºß°ÌÃÖ¤òÅĞÏ¿¤¹¤ë */
+/* sfpã®ç¾åœ¨ä½ç½®ã‚’ç™»éŒ²ã™ã‚‹ */
 int SeekPositionAdd(SeekFILE *sfp) {
 #if SEEK_STEP_MAX > 0
   if (SeekGetFileID(sfp) < 0
@@ -246,7 +246,7 @@ int SeekPositionAdd(SeekFILE *sfp) {
   return 1;
 }
 
-/* stepÈÖÌÜ¤ËÅĞÏ¿¤·¤¿°ÌÃÖ¤Ë¥·¡¼¥¯¤¹¤ë¡£(0 <= step <= pos.n) */
+/* stepç•ªç›®ã«ç™»éŒ²ã—ãŸä½ç½®ã«ã‚·ãƒ¼ã‚¯ã™ã‚‹ã€‚(0 <= step <= pos.n) */
 int SeekPositionMove(SeekFILE *sfp, SeekSize step) {
   off_t pos;
 
@@ -260,12 +260,12 @@ int SeekPositionMove(SeekFILE *sfp, SeekSize step) {
   return 1;
 }
 
-/* ---- SeekPosType·¿ ------------------------------------------------------ */
+/* ---- SeekPosTypeå‹ ------------------------------------------------------ */
 
 #define SEEK_POS_RAW 1000
 #define SEEK_POS_COL_MIN 16
 
-/* SeekPosType¤Î½é´ü²½ */
+/* SeekPosTypeã®åˆæœŸåŒ– */
 static void SeekInitPos(SeekFILE *sfp) {
   SeekSize i;
 
@@ -288,7 +288,7 @@ static void SeekInitPos(SeekFILE *sfp) {
     sfp->pos.buf[i] = NULL;
 }
 
-/* SeekPosType¤Î½ªÎ»½èÍı */
+/* SeekPosTypeã®çµ‚äº†å‡¦ç† */
 static void SeekTermPos(SeekFILE *sfp) {
   SeekSize i;
 
@@ -303,7 +303,7 @@ static void SeekTermPos(SeekFILE *sfp) {
   sfp->pos.max = -1;
 }
 
-/* stepÈÖÌÜ¤Î°ÌÃÖ¤òval¤ËÀßÄê¤¹¤ë(ÊÖ¤êÃÍ¤Ïval¡£¼ºÇÔ¤ÏÉé¤òÊÖ¤¹) */
+/* stepç•ªç›®ã®ä½ç½®ã‚’valã«è¨­å®šã™ã‚‹(è¿”ã‚Šå€¤ã¯valã€‚å¤±æ•—ã¯è² ã‚’è¿”ã™) */
 static off_t SeekSetPos(SeekFILE *sfp, SeekSize step, off_t val) {
   SeekSize col, i;
   off_t *p;
@@ -334,12 +334,12 @@ static off_t SeekSetPos(SeekFILE *sfp, SeekSize step, off_t val) {
       {fprintf(stderr, "Allocation failed.\n"); exit(1);}
     sfp->pos.buf[col] = p;
     for (i = 0; i <  SEEK_POS_RAW; i++)
-      p[i] = -1; /* ÉÔÀµ¤ÊÃÍ */
+      p[i] = -1; /* ä¸æ­£ãªå€¤ */
   }
   return (p[step % SEEK_POS_RAW] = val);
 }
 
-/* stepÈÖÌÜ¤Î°ÌÃÖ¤òµá¤á¤ë(¼ºÇÔ¤ÏÉé¤ÎÃÍ) */
+/* stepç•ªç›®ã®ä½ç½®ã‚’æ±‚ã‚ã‚‹(å¤±æ•—ã¯è² ã®å€¤) */
 static off_t SeekGetPos(SeekFILE *sfp, SeekSize step) {
   off_t *p;
 
@@ -349,7 +349,7 @@ static off_t SeekGetPos(SeekFILE *sfp, SeekSize step) {
   return p[step % SEEK_POS_RAW];
 }
 
-/* ---- SeekCacheType·¿ ---------------------------------------------------- */
+/* ---- SeekCacheTypeå‹ ---------------------------------------------------- */
 
 #define CASHE_NOTHING (-1)
 #define CASHE_MAX     16
@@ -359,7 +359,7 @@ static SeekCacheType _cache[CASHE_MAX];
 
 #define _SeekCacheIsActive(i) (_cache[i].p != NULL)
 
-/* SeekCacheType¥·¥¹¥Æ¥à¤Î½é´ü²½ */
+/* SeekCacheTypeã‚·ã‚¹ãƒ†ãƒ ã®åˆæœŸåŒ– */
 static void SeekCacheInit(void) {
   int i;
 
@@ -369,7 +369,7 @@ static void SeekCacheInit(void) {
   _cache_init = 1;
 }
 
-/* SeekCacheType¤Î³ÎÊİ(¼ºÇÔ¤ÏNULL¤òÊÖ¤¹) */
+/* SeekCacheTypeã®ç¢ºä¿(å¤±æ•—ã¯NULLã‚’è¿”ã™) */
 static SeekCacheType *SeekCacheAlloc(const SeekFileDataFunc *vf) {
   SeekCacheType *cp;
   int i;
@@ -393,14 +393,14 @@ static SeekCacheType *SeekCacheAlloc(const SeekFileDataFunc *vf) {
   return cp;
 }
 
-/* SeekCacheType¤ÎÌµ¸ú²½ */
+/* SeekCacheTypeã®ç„¡åŠ¹åŒ– */
 static void SeekCacheClear(SeekCacheType *cp) {
   if (!_cache_init)
     return;
   cp->current = CASHE_NOTHING;
 }
 
-/* SeekCacheType¤Î²òÊü */
+/* SeekCacheTypeã®è§£æ”¾ */
 static void SeekCacheFree(SeekCacheType *cp) {
   int i;
 
@@ -415,7 +415,7 @@ static void SeekCacheFree(SeekCacheType *cp) {
   cp->current = CASHE_NOTHING;
 }
 
-/* SeekCacheType¤Î½ñ¤­¹ş¤ß(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* SeekCacheTypeã®æ›¸ãè¾¼ã¿(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 static int SeekCacheSave(SeekCacheType *cp, const void *val, SeekSize step) {
   SeekSize i;
 
@@ -434,7 +434,7 @@ static int SeekCacheSave(SeekCacheType *cp, const void *val, SeekSize step) {
   return 1;
 }
 
-/* SeekCacheType¤ÎÆÉ¤ß¹ş¤ß(ÊÖ¤êÃÍ¤ÏÀ®¸ù¤Î¿¿µ¶) */
+/* SeekCacheTypeã®èª­ã¿è¾¼ã¿(è¿”ã‚Šå€¤ã¯æˆåŠŸã®çœŸå½) */
 static int SeekCacheLoad(const SeekCacheType *cp, void *val, SeekSize step) {
   SeekSize i;
 
